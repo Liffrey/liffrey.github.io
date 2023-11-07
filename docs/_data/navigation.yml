@@ -15,14 +15,14 @@ main:
   # - title: "Blog Posts"
   #   url: /year-archive/
 
-  - title: "Game Design"
-    url: /game-design/
+  - title: "Portfolio"
+    url: /portfolio/
 
-  - title: "CV"
-    url: /cv/
+  #- title: "Resume"
+  #  url: /resume/
 
-  - title: "Other Works"
-    url: /other-works
+ # - title: "Other Works"
+ #   url: /other-works
 
   # - title: "Publications"
   #   url: /publications/
