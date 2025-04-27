@@ -1,0 +1,24 @@
+---
+title: "Portfolio"
+layout: page
+permalink: /portfolio/
+---
+
+<h2>Selected Work</h2>
+
+<div class="item-grid">
+  {% assign sorted = site.portfolio | sort: 'date' | reverse %}
+  {% for proj in sorted %}
+  <article class="item">
+    {% if proj.cover %}
+      <img src="{{ proj.cover | relative_url }}" alt="" style="width:100%;border-radius:var(--radius);margin-bottom:.6rem">
+    {% endif %}
+    <h3><a href="{{ proj.url | relative_url }}">{{ proj.title }}</a></h3>
+    <p>{{ proj.summary }}</p>
+    <p style="font-size:.9rem">
+      {% if proj.github %}<a href="{{ proj.github }}">GitHub</a>{% endif %}
+      {% if proj.demo %} · <a href="{{ proj.demo }}">Demo</a>{% endif %}
+    </p>
+  </article>
+  {% endfor %}
+</div>

@@ -149,3 +149,4 @@ section h2::after{
 .cv-list li{margin-bottom:.65rem;}
 
 .page-wrap{padding:3rem 1.5rem;max-width:60rem;margin:auto;}
+.item img{display:block;object-fit:cover;height:120px;width:100%;border-radius:var(--radius);}

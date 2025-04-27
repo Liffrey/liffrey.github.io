@@ -3,3 +3,7 @@ description: "Portfolio & CV"
 theme: null           # we’ll use our own CSS
 markdown: kramdown
 permalink: pretty
+
+collections:
+  portfolio:
+    output: true      # her proje için ayrı bir HTML üret
