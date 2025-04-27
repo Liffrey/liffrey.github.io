@@ -6,4 +6,5 @@ permalink: pretty
 
 collections:
   portfolio:
-    output: true      # her proje için ayrı bir HTML üret
+    output: true
+    permalink: /portfolio/:name/   # ← ekleyin
