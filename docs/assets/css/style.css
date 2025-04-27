@@ -27,3 +27,4 @@ footer{text-align:center;padding:2rem 0;color:var(--muted);font-size:.9rem}
   .nav{border-bottom:1px solid #e5e5e5}
   .item{border:1px solid #e5e7eb}
 }
+.container{max-width:72rem;margin-inline:auto;padding-inline:1rem;}

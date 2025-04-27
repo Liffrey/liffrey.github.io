@@ -12,9 +12,10 @@ layout: none
   <title>{{ site.title }}</title>
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
 
+  <!-- hero’ya özel küçük stil -->
   <style>
     .hero{position:relative;background:radial-gradient(circle at 25% 25%,rgba(79,131,255,.25),transparent 60%);padding:6rem 1.5rem 4rem}
-    .hero-inner{display:flex;flex-wrap:wrap;align-items:center;gap:3rem;max-width:75rem;margin:auto}
+    .hero-inner{display:flex;flex-wrap:wrap;align-items:center;gap:3rem}
     .hero-text{flex:1 1 320px;min-width:260px}
     .hero-text h2{font-size:clamp(2.4rem,5vw,4rem);margin-bottom:.3rem}
     .subtitle{font-size:clamp(1.1rem,2.4vw,1.25rem);color:var(--muted);margin-bottom:1rem}
@@ -38,8 +39,9 @@ layout: none
     </nav>
   </header>
 
+  <!-- ▸ HERO -->
   <section id="hero" class="hero">
-    <div class="hero-inner">
+    <div class="container hero-inner">
       <div class="hero-text">
         <h2>Hey, I'm <span class="accent">{{ site.title }}</span></h2>
         <span class="subtitle">Researcher · Developer · Battery Enthusiast</span>
@@ -55,7 +57,8 @@ layout: none
     </div>
   </section>
 
-  <section id="contact" class="page-wrap">
+  <!-- ▸ CONTACT -->
+  <section id="contact" class="container page-wrap">
     <h2>Contact</h2>
     <p>Email: <a href="mailto:you@example.com">you@example.com</a></p>
     <p><a href="https://linkedin.com/in/yourprofile">LinkedIn</a> · <a href="https://github.com/yourusername">GitHub</a></p>
