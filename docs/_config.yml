@@ -1,10 +1,11 @@
 title: "Liffrey"
 description: "Researcher · Developer · Portfolio"
-baseurl: ""            # <username>.github.io kökü
 markdown: kramdown
-permalink: pretty
+permalink: pretty        # nice /about/ style URLs
+theme: null              # we’ll use our own CSS
 
+# ❶ Define the collection
 collections:
   portfolio:
-    output: true
-    permalink: /portfolio/:name/
+    output: true                 # build HTML for each item
+    permalink: /portfolio/:name/ # clean directory URL

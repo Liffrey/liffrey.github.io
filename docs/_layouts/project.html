@@ -1,18 +1,13 @@
+<!-- _layouts/project.html -->
 ---
-layout: page
+layout: base
 ---
-
 <article class="project">
-  <h2>{{ page.title }}</h2>
-
-  {% if page.cover %}
-    <img src="{{ page.cover | relative_url }}" alt="" style="max-width:100%;border-radius:var(--radius);margin:1rem 0">
-  {% endif %}
-
+  <h1>{{ page.title }}</h1>
+  {% if page.cover %}<img class="cover" src="{{ page.cover | relative_url }}" alt="">{{% endif %}
   {{ content }}
-
-  <p>
-    {% if page.github %}<a class="btn" href="{{ page.github }}">GitHub</a>{% endif %}
-    {% if page.demo  %}<a class="btn ghost" href="{{ page.demo  }}">Demo</a>{% endif %}
+  <p class="links">
+    {% if page.github %}<a href="{{ page.github }}">GitHub repo ↗︎</a>{% endif %}
+    {% if page.demo  %} · <a href="{{ page.demo }}">Live demo ↗︎</a>{% endif %}
   </p>
 </article>
