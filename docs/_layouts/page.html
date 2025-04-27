@@ -3,16 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <meta name="theme-color" content="#161616" />
   <meta name="color-scheme" content="dark light" />
-
   <title>{{ page.title }} · {{ site.title }}</title>
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
 </head>
 <body>
 
-  <!-- ▸ NAV -------------------------------------------------------------- -->
   <header class="nav" role="banner">
     <h1 class="logo">{{ site.title }}</h1>
     <nav aria-label="Main">
@@ -23,24 +20,15 @@
     </nav>
   </header>
 
-  <!-- ▸ PAGE CONTENT ----------------------------------------------------- -->
-  <main>
-    <section class="page-wrap">
-      {{ content }}
-    </section>
-  </main>
+  <main><section class="page-wrap">{{ content }}</section></main>
 
-  <!-- ▸ FOOTER ----------------------------------------------------------- -->
   <footer><small>© {{ site.time | date: '%Y' }} {{ site.title }}</small></footer>
 
-  <!-- ▸ back-to-top ------------------------------------------------------ -->
   <button id="toTop" aria-label="Go to top">↑</button>
   <script>
-    const btn = document.getElementById('toTop');
-    window.addEventListener('scroll', () => {
-      btn.classList.toggle('show', window.scrollY > 600);
-    });
-    btn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+    const b=document.getElementById('toTop');
+    addEventListener('scroll',()=>b.classList.toggle('show',scrollY>600));
+    b.onclick=()=>scrollTo({top:0,behavior:'smooth'});
   </script>
 </body>
 </html>

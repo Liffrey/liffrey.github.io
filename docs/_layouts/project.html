@@ -1,0 +1,17 @@
+---
+layout: page
+---
+
+<article class="project">
+  <h2>{{ page.title }}</h2>
+  {% if page.cover %}
+    <img src="{{ page.cover | relative_url }}" alt="" style="max-width:100%;border-radius:var(--radius);margin:1rem 0">
+  {% endif %}
+
+  {{ content }}
+
+  <p>
+    {% if page.github %}<a class="btn" href="{{ page.github }}">GitHub</a>{% endif %}
+    {% if page.demo  %}<a class="btn ghost" href="{{ page.demo  }}">Demo</a>{% endif %}
+  </p>
+</article>

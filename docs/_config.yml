@@ -1,10 +1,10 @@
 title: "Liffrey"
-description: "Portfolio & CV"
-theme: null           # we’ll use our own CSS
+description: "Researcher · Developer · Portfolio"
+baseurl: ""            # <username>.github.io kökü
 markdown: kramdown
 permalink: pretty
 
 collections:
   portfolio:
     output: true
-    permalink: /portfolio/:name/   # ← ekleyin
+    permalink: /portfolio/:name/

@@ -7,20 +7,30 @@ layout: none
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Mobile browser theme colour & dark/light support -->
   <meta name="theme-color" content="#161616" />
   <meta name="color-scheme" content="dark light" />
-
   <title>{{ site.title }}</title>
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-</head>
 
+  <style>
+    .hero{position:relative;background:radial-gradient(circle at 25% 25%,rgba(79,131,255,.25),transparent 60%);padding:6rem 1.5rem 4rem}
+    .hero-inner{display:flex;flex-wrap:wrap;align-items:center;gap:3rem;max-width:75rem;margin:auto}
+    .hero-text{flex:1 1 320px;min-width:260px}
+    .hero-text h2{font-size:clamp(2.4rem,5vw,4rem);margin-bottom:.3rem}
+    .subtitle{font-size:clamp(1.1rem,2.4vw,1.25rem);color:var(--muted);margin-bottom:1rem}
+    .summary{max-width:40ch;margin-bottom:1.5rem}
+    .cta{display:flex;flex-wrap:wrap;gap:1rem}
+    .btn.ghost{background:transparent;border:2px solid var(--accent);color:var(--accent)}
+    .btn.ghost:hover{background:var(--accent);color:#fff}
+    .hero-illus{flex:0 1 320px;min-width:260px}
+    .hero-illus img{width:100%;border-radius:var(--radius);filter:drop-shadow(0 5px 15px rgba(0,0,0,.25))}
+  </style>
+</head>
 <body>
-  <!-- ▸ NAV -->
+
   <header class="nav" role="banner">
     <h1 class="logo">{{ site.title }}</h1>
-    <nav aria-label="Main navigation">
+    <nav>
       <a href="{{ '/about/' | relative_url }}">About</a>
       <a href="{{ '/portfolio/' | relative_url }}">Portfolio</a>
       <a href="{{ '/cv/' | relative_url }}">CV</a>
@@ -28,7 +38,6 @@ layout: none
     </nav>
   </header>
 
-  <!-- ▸ HERO -->
   <section id="hero" class="hero">
     <div class="hero-inner">
       <div class="hero-text">
@@ -41,30 +50,24 @@ layout: none
         </div>
       </div>
       <div class="hero-illus">
-        <!-- Provide your own illustration / photo here -->
-        <img src="{{ '/assets/img/hero-battery.svg' | relative_url }}" alt="Battery algorithm illustration" loading="lazy">
+        <img src="{{ '/assets/img/hero-battery.svg' | relative_url }}" alt="Battery illustration" loading="lazy">
       </div>
     </div>
   </section>
 
-  <!-- ▸ CONTACT -->
   <section id="contact" class="page-wrap">
     <h2>Contact</h2>
     <p>Email: <a href="mailto:you@example.com">you@example.com</a></p>
-    <p>
-      <a href="https://linkedin.com/in/yourprofile">LinkedIn</a> ·
-      <a href="https://github.com/yourusername">GitHub</a>
-    </p>
+    <p><a href="https://linkedin.com/in/yourprofile">LinkedIn</a> · <a href="https://github.com/yourusername">GitHub</a></p>
   </section>
 
   <footer><small>© {{ site.time | date: '%Y' }} {{ site.title }}</small></footer>
 
-  <!-- ▸ back‑to‑top button -->
   <button id="toTop" aria-label="Go to top">↑</button>
   <script>
-    const btn=document.getElementById('toTop');
-    window.addEventListener('scroll',()=>{btn.classList.toggle('show',window.scrollY>600);});
-    btn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+    const b=document.getElementById('toTop');
+    addEventListener('scroll',()=>b.classList.toggle('show',scrollY>600));
+    b.onclick=()=>scrollTo({top:0,behavior:'smooth'});
   </script>
 </body>
 </html>
