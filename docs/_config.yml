@@ -4,7 +4,6 @@ markdown: kramdown
 permalink: pretty        # nice /about/ style URLs
 theme: null              # we’ll use our own CSS
 
-# ❶ Define the collection
 collections:
   portfolio:
     output: true                 # build HTML for each item
