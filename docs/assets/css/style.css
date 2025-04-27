@@ -150,3 +150,28 @@ section h2::after{
 
 .page-wrap{padding:3rem 1.5rem;max-width:60rem;margin:auto;}
 .item img{display:block;object-fit:cover;height:120px;width:100%;border-radius:var(--radius);}
+
+
+.hero{
+  position:relative;
+  background:radial-gradient(circle at 20% 20%, rgba(79,131,255,.25), transparent 60%);
+  padding:calc(var(--space)*6) var(--space);
+  overflow:hidden;
+}
+.hero-inner{
+  display:flex;flex-wrap:wrap;align-items:center;gap:3rem;
+  max-width:75rem;margin:auto;
+}
+.hero-text{flex:1 1 320px;min-width:280px;animation:fadeInUp .6s ease-out both;}
+.hero-text h2{font-size:clamp(2.5rem,5vw,4rem);margin-bottom:.4rem;}
+.subtitle{font-size:clamp(1.1rem,2.5vw,1.25rem);color:var(--muted);margin-bottom:1rem;display:inline-block;}
+.summary{max-width:40ch;margin-bottom:1.5rem;}
+.cta{display:flex;flex-wrap:wrap;gap:1rem;}
+.btn.ghost{background:transparent;border:2px solid var(--accent);color:var(--accent);}
+.btn.ghost:hover{background:var(--accent);color:#fff;}
+.hero-illus{flex:0 1 320px;min-width:260px;animation:fadeIn .8s ease-out both;}
+.hero-illus img{width:100%;filter:drop-shadow(0 5px 15px rgba(0,0,0,.25));border-radius:var(--radius);} 
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+/* Optional wrapper for page‑content sections */
+.page-wrap{padding:3rem 1.5rem;max-width:60rem;margin:auto;}

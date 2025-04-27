@@ -1,5 +1,5 @@
 ---
-layout: none    <!-- Jekyll’in sadece Liquid’i işlemeye zorlar -->
+layout: none
 ---
 
 <!DOCTYPE html>
@@ -8,9 +8,8 @@ layout: none    <!-- Jekyll’in sadece Liquid’i işlemeye zorlar -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Mobil tarayıcı çerçevesi rengi -->
+  <!-- Mobile browser theme colour & dark/light support -->
   <meta name="theme-color" content="#161616" />
-  <!-- Koyu / aydınlık şema bildirimi -->
   <meta name="color-scheme" content="dark light" />
 
   <title>{{ site.title }}</title>
@@ -18,25 +17,38 @@ layout: none    <!-- Jekyll’in sadece Liquid’i işlemeye zorlar -->
 </head>
 
 <body>
-  <!-- ▸ Navigasyon --------------------------------------------------------- -->
+  <!-- ▸ NAV -->
   <header class="nav" role="banner">
     <h1 class="logo">{{ site.title }}</h1>
-    <nav aria-label="Main">
-      <a href="/about/">About</a>
-      <a href="/portfolio/">Portfolio</a>
-      <a href="/cv/">CV</a>
+    <nav aria-label="Main navigation">
+      <a href="{{ '/about/' | relative_url }}">About</a>
+      <a href="{{ '/portfolio/' | relative_url }}">Portfolio</a>
+      <a href="{{ '/cv/' | relative_url }}">CV</a>
       <a href="#contact">Contact</a>
     </nav>
   </header>
 
-  <!-- ▸ Hero --------------------------------------------------------------- -->
-  <section id="hero">
-    <h2>Hello! I’m <span class="accent">{{ site.title }}</span></h2>
-    <a class="btn" href="/portfolio/">See my work</a>
+  <!-- ▸ HERO -->
+  <section id="hero" class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h2>Hey, I'm <span class="accent">{{ site.title }}</span></h2>
+        <span class="subtitle">Researcher · Developer · Battery Enthusiast</span>
+        <p class="summary">I turn complex electrochemical models into efficient, maintainable code — and love telling the story along the way.</p>
+        <div class="cta">
+          <a class="btn" href="/portfolio/">Explore Portfolio</a>
+          <a class="btn ghost" href="#contact">Contact</a>
+        </div>
+      </div>
+      <div class="hero-illus">
+        <!-- Provide your own illustration / photo here -->
+        <img src="{{ '/assets/img/hero-battery.svg' | relative_url }}" alt="Battery algorithm illustration" loading="lazy">
+      </div>
+    </div>
   </section>
 
-  <!-- ▸ Contact ------------------------------------------------------------ -->
-  <section id="contact">
+  <!-- ▸ CONTACT -->
+  <section id="contact" class="page-wrap">
     <h2>Contact</h2>
     <p>Email: <a href="mailto:you@example.com">you@example.com</a></p>
     <p>
@@ -47,14 +59,12 @@ layout: none    <!-- Jekyll’in sadece Liquid’i işlemeye zorlar -->
 
   <footer><small>© {{ site.time | date: '%Y' }} {{ site.title }}</small></footer>
 
-  <!-- ▸ Back-to-top düğmesi + basit JS ------------------------------------- -->
+  <!-- ▸ back‑to‑top button -->
   <button id="toTop" aria-label="Go to top">↑</button>
   <script>
-    const btn = document.getElementById('toTop');
-    window.addEventListener('scroll', () => {
-      btn.classList.toggle('show', window.scrollY > 600);
-    });
-    btn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+    const btn=document.getElementById('toTop');
+    window.addEventListener('scroll',()=>{btn.classList.toggle('show',window.scrollY>600);});
+    btn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
   </script>
 </body>
 </html>
