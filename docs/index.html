@@ -1,19 +1,27 @@
+---
+layout: none    <!-- Jekyll’in sadece Liquid’i işlemeye zorlar -->
+---
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <!-- Mobil tarayıcı çerçevesi için tema rengi -->
-    <meta name="theme-color" content="#161616" />
-    <!-- Tarayıcıya koyu aydınlık şemasını bildir -->
-    <meta name="color-scheme" content="dark light" />
-    <title>{{ site.title }}</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Mobil tarayıcı çerçevesi rengi -->
+  <meta name="theme-color" content="#161616" />
+  <!-- Koyu / aydınlık şema bildirimi -->
+  <meta name="color-scheme" content="dark light" />
+
+  <title>{{ site.title }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+
 <body>
+  <!-- ▸ Navigasyon --------------------------------------------------------- -->
   <header class="nav" role="banner">
-    <h1>{{ site.title }}</h1>
-    <nav>
+    <h1 class="logo">{{ site.title }}</h1>
+    <nav aria-label="Main">
       <a href="/about/">About</a>
       <a href="/portfolio/">Portfolio</a>
       <a href="/cv/">CV</a>
@@ -21,32 +29,33 @@
     </nav>
   </header>
 
+  <!-- ▸ Hero --------------------------------------------------------------- -->
   <section id="hero">
     <h2>Hello! I’m <span class="accent">{{ site.title }}</span></h2>
     <p>Short tagline goes here.</p>
-    <a class="btn" href="#portfolio">See my work</a>
+    <a class="btn" href="/portfolio/">See my work</a>
   </section>
 
-  <section id="about">{% include_relative about.md %}</section>
-  <section id="portfolio">{% include_relative portfolio.md %}</section>
-  <section id="cv">{% include_relative cv.md %}</section>
-
+  <!-- ▸ Contact ------------------------------------------------------------ -->
   <section id="contact">
     <h2>Contact</h2>
     <p>Email: <a href="mailto:you@example.com">you@example.com</a></p>
-    <p>LinkedIn / GitHub links…</p>
+    <p>
+      <a href="https://linkedin.com/in/yourprofile">LinkedIn</a> ·
+      <a href="https://github.com/yourusername">GitHub</a>
+    </p>
   </section>
 
   <footer><small>© {{ site.time | date: '%Y' }} {{ site.title }}</small></footer>
 
-
+  <!-- ▸ Back-to-top düğmesi + basit JS ------------------------------------- -->
   <button id="toTop" aria-label="Go to top">↑</button>
-<script>
-  const btn = document.getElementById('toTop');
-  window.addEventListener('scroll', ()=> {
-    btn.classList.toggle('show', window.scrollY > 600);
-  });
-  btn.onclick = () => window.scrollTo({top:0,behavior:'smooth'});
-</script>
+  <script>
+    const btn = document.getElementById('toTop');
+    window.addEventListener('scroll', () => {
+      btn.classList.toggle('show', window.scrollY > 600);
+    });
+    btn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+  </script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 ---
 title: "Li-ion Battery SOC Estimator"
-layout: default
-permalink: /portfolio/li-ion-soc/
+layout: page
+permalink: /portfolio/
 ---
 
 ## Li-ion Battery SOC Estimator

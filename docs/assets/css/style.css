@@ -147,3 +147,5 @@ section h2::after{
 /* ◆ Tipografi: CV listeleri */
 .cv-list{margin:0 0 1.8rem 0;padding-left:1.2rem;border-left:3px solid var(--accent);}
 .cv-list li{margin-bottom:.65rem;}
+
+.page-wrap{padding:3rem 1.5rem;max-width:60rem;margin:auto;}
