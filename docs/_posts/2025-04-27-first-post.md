@@ -4,4 +4,4 @@ title: First Post
 date: 2025-04-27
 ---
 
-This is a short example post. Replace it with your own content in Markdown.
+This is an example blog post. Write your thoughts in Markdown.

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="auto">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>{{ page.title }} | {{ site.title }}</title>
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  {%- include analytics.html -%}
   {%- seo -%}
 </head>
 <body>
@@ -16,6 +17,8 @@
         <a href="{{ '/portfolio' | relative_url }}">Portfolio</a>
         <a href="{{ '/cv' | relative_url }}">CV</a>
         <a href="{{ '/blog' | relative_url }}">Blog</a>
+        <a href="{{ '/search' | relative_url }}">Search</a>
+        <button id="theme-toggle" aria-label="Toggle theme">🌓</button>
       </nav>
     </div>
   </header>
@@ -24,8 +27,13 @@
   </main>
   <footer class="site-footer">
     <div class="container">
-      <p>&copy; {{ site.time | date: "%Y" }} {{ site.title }}. Built with <a href="https://jekyllrb.com/">Jekyll</a> &amp; <a href="https://pages.github.com/">GitHub Pages</a>.</p>
+      <p>&copy; {{ site.time | date: "%Y" }} {{ site.title }}.</p>
     </div>
   </footer>
+  <script src="{{ '/assets/js/theme.js' | relative_url }}"></script>
+  {% if page.search_script %}
+  <script src="https://unpkg.com/lunr/lunr.js"></script>
+  <script src="{{ '/assets/js/search.js' | relative_url }}"></script>
+  {% endif %}
 </body>
 </html>

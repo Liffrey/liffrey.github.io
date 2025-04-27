@@ -7,7 +7,7 @@ permalink: /blog/
 # Blog
 
 {% if site.posts == empty %}
-_No blog posts yet – create one in the **_posts/** folder!_
+_No blog posts yet._
 {% else %}
 {% for post in site.posts %}
 <article>

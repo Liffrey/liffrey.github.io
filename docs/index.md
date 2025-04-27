@@ -5,4 +5,4 @@ title: Home
 
 # Welcome
 
-This site hosts my **portfolio**, **curriculum vitae**, and an _occasional blog_ about research and software.
+This site showcases my academic projects and reflections.

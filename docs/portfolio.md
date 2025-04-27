@@ -6,8 +6,11 @@ permalink: /portfolio/
 
 # Portfolio
 
-A brief showcase of selected projects, publications, or software.
-
-## Example Project
-
-**Battery Management System Optimization (2024)** – Genetic Algorithm & ACO techniques compared for Li‑ion SOC estimation.
+{% for project in site.projects %}
+<article>
+  <h2><a href="{{ project.url | relative_url }}">{{ project.title }}</a></h2>
+  <p class="post-meta">{{ project.date | date: "%Y" }}</p>
+  <p>{{ project.excerpt }}</p>
+</article>
+<hr>
+{% endfor %}
