@@ -1,24 +1,116 @@
+/* -----------------------------   Temel değişkenler   ----------------------------- */
 :root{
-    --bg:#fff;
-    --fg:#222;
-    --accent:#2563eb;
-    --radius:0.75rem;
-    --space:1.25rem;
-    --font-main:system-ui,-apple-system,"Segoe UI",Roboto;
+  /* Koyu, yumuşak arka planlar */
+  --bg-0:#161616;   /* ana zemin */
+  --bg-1:#1e1e1e;   /* kart / bölüm arka planı */
+  --bg-2:#262626;   /* gezinme çubuğu */
+
+  /* Metin renkleri */
+  --fg-0:#e4e4e7;   /* ana metin */
+  --fg-1:#f5f5f5;   /* başlık/metin vurgu */
+  --muted:#a1a1aa;  /* ikincil metin */
+
+  /* Vurgu rengi (sakin mavi) */
+  --accent:#4f83ff;
+
+  /* Diğer ayarlar */
+  --radius:.8rem;
+  --space:1.25rem;
+  --font-main:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+
+/* -----------------------------   Sıfırlama & genel   ----------------------------- */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--font-main);
+  background:var(--bg-0);
+  color:var(--fg-0);
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Linkler & buton */
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+.btn{
+  display:inline-block;
+  padding:.65rem 1.6rem;
+  background:var(--accent);
+  color:#fff;
+  border-radius:var(--radius);
+  font-weight:600;
+  transition:opacity .2s ease;
+}
+.btn:hover{opacity:.88;}
+
+/* -----------------------------   Navigasyon   ----------------------------- */
+.nav{
+  position:sticky;top:0;z-index:10;
+  background:var(--bg-2, #111);
+  backdrop-filter:blur(8px);
+  display:flex;justify-content:space-between;align-items:center;
+  padding:var(--space) calc(var(--space)*2);
+}
+.nav h1{font-size:1.15rem;color:var(--fg-1);}
+.nav nav{display:flex;gap:1.25rem;font-weight:500;}
+@media(max-width:500px){
+  .nav nav{gap:.75rem;font-size:.9rem;flex-wrap:wrap;}
+}
+
+/* -----------------------------   Bölümler   ----------------------------- */
+section{
+  padding:calc(var(--space)*3) calc(var(--space)*2);
+  max-width:60rem;margin:auto;
+}
+h2{
+  color:var(--fg-1);
+  margin-bottom:1.2rem;
+  font-size:clamp(1.7rem,3.5vw,2.4rem);
+}
+p{margin-bottom:1.05rem;font-size:clamp(1rem,2.8vw,1.05rem);}
+
+/* Kahraman bölümü */
+#hero{
+  display:grid;place-items:center;
+  min-height:78vh;text-align:center;
+  padding:0 calc(var(--space)*2);
+}
+#hero h2{font-size:clamp(2.4rem,6vw,4rem);margin-bottom:.8rem;}
+.accent{color:var(--accent);}
+
+/* Kart / proje ızgarası */
+.item-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:var(--space);
+}
+.item{
+  background:var(--bg-1);
+  border:1px solid #2d2d2d;
+  border-radius:var(--radius);
+  padding:var(--space);
+  transition:transform .15s ease;
+}
+.item:hover{transform:translateY(-4px);}
+.item h3{color:var(--fg-1);margin-bottom:.4rem;font-size:1.15rem;}
+.item p{margin:0;font-size:.95rem;color:var(--muted);}
+
+/* İletişim + footer */
+#contact p{font-size:1rem;}
+footer{
+  text-align:center;padding:2.5rem 0;
+  color:var(--muted);font-size:.9rem;
+}
+
+/* -----------------------------   Karanlık/aydınlık tercih   ----------------------------- */
+/* Kullanıcının sisteminde açık tema açıksa: */
+@media (prefers-color-scheme: light){
+  :root{
+    --bg-0:#ffffff;--bg-1:#fafafa;--bg-2:rgba(255,255,255,.9);
+    --fg-0:#222;--fg-1:#000;--muted:#555;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:var(--font-main);color:var(--fg);background:var(--bg);line-height:1.6}
-  a{color:var(--accent);text-decoration:none}
-  .nav{display:flex;justify-content:space-between;align-items:center;padding:var(--space) calc(var(--space)*2);position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(8px)}
-  .nav a{margin-left:1rem;font-weight:500}
-  #hero{display:grid;place-items:center;height:80vh;text-align:center;padding:0 calc(var(--space)*2)}
-  #hero h2{font-size:clamp(2.5rem,5vw,4rem);margin-bottom:.5rem}
-  .accent{color:var(--accent)}
-  .btn{display:inline-block;margin-top:1rem;padding:.6rem 1.4rem;background:var(--accent);color:#fff;border-radius:var(--radius);font-weight:600}
-  section{padding:calc(var(--space)*3) calc(var(--space)*2);max-width:64rem;margin:auto}
-  h2{margin-bottom:1rem;font-size:2rem}
-  #portfolio .item-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:var(--space)}
-  .item{border:1px solid #e5e7eb;border-radius:var(--radius);padding:var(--space)}
-  footer{text-align:center;padding:2rem 0;color:#666}
-  @media(max-width:600px){.nav a{margin-left:.5rem}}
-  
+  body{color:var(--fg-0);}
+  .nav{border-bottom:1px solid #e5e5e5;}
+  .item{border:1px solid #e5e7eb;}
+}

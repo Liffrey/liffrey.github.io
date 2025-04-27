@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>{{ site.title }}</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!-- Mobil tarayıcı çerçevesi için tema rengi -->
+    <meta name="theme-color" content="#161616" />
+    <!-- Tarayıcıya koyu aydınlık şemasını bildir -->
+    <meta name="color-scheme" content="dark light" />
+    <title>{{ site.title }}</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
 <body>
-  <header class="nav">
+  <header class="nav" role="banner">
     <h1>{{ site.title }}</h1>
     <nav>
       <a href="#about">About</a>
