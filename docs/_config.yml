@@ -1,10 +1,11 @@
-title: "Liffrey"
-description: "Researcher · Developer · Portfolio"
+title: "Your Name"
+email: your.email@example.com
+description: >-
+  Academic CV, portfolio & blog.
+url: "https://username.github.io"
+baseurl: "" # keep empty for username.github.io root
 markdown: kramdown
-permalink: pretty        # nice /about/ style URLs
-theme: null              # we’ll use our own CSS
-
-collections:
-  portfolio:
-    output: true                 # build HTML for each item
-    permalink: /portfolio/:name/ # clean directory URL
+permalink: /:title/
+theme: null
+plugins:
+  - jekyll-seo-tag
