@@ -1,6 +1,21 @@
-## About Me
-Hi! I’m **Your Name**, a … (write in Markdown).
+---
+title: "About"
+layout: default
+permalink: /about/
+---
 
-### Skills
-- Skill A
-- Skill B
+## About Me
+
+Kendinizi tanıtacağınız kısa paragraf.  
+Bu sayfa Markdown, dilediğinizce uzatabilirsiniz.
+
+### Değerler & Yaklaşım
+- **Yaratıcılık:** ...
+- **Detaycılık:** ...
+
+### Araçlar
+| Teknoloji | Seviyem |
+|-----------|---------|
+| Python    | ⭐⭐⭐⭐☆ |
+| MATLAB    | ⭐⭐⭐⭐☆ |
+| C++       | ⭐⭐⭐☆☆ |

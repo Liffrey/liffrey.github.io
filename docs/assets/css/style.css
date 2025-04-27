@@ -114,3 +114,36 @@ footer{
   .nav{border-bottom:1px solid #e5e5e5;}
   .item{border:1px solid #e5e7eb;}
 }
+
+/* —————————————————   Küçük tasarım dokunuşları   ————————————————— */
+
+/* ◆ Section header çizgisi */
+section h2::after{
+  content:"";
+  display:block;
+  width:3rem;
+  height:3px;
+  background:var(--accent);
+  margin:.6rem 0 1.6rem;
+  border-radius:3px;
+}
+
+/* ◆ “back-to-top” yüzen düğme (mobilde görünür) */
+#toTop{
+  position:fixed;right:1rem;bottom:1.5rem;
+  width:2.75rem;height:2.75rem;
+  display:grid;place-items:center;
+  background:var(--accent);color:#fff;
+  border-radius:50%;cursor:pointer;
+  box-shadow:0 2px 6px rgb(0 0 0 /.25);
+  transition:opacity .25s ease,transform .25s;
+  opacity:0;pointer-events:none;z-index:50;
+}
+#toTop.show{opacity:1;pointer-events:auto;}
+
+/* ◆ Proje kartına gölge */
+.item{box-shadow:0 2px 4px rgb(0 0 0 /.15);}
+
+/* ◆ Tipografi: CV listeleri */
+.cv-list{margin:0 0 1.8rem 0;padding-left:1.2rem;border-left:3px solid var(--accent);}
+.cv-list li{margin-bottom:.65rem;}
