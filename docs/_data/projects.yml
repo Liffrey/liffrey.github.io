@@ -1,0 +1,9 @@
+- title: "Project One"
+  description: "What it does, tech stack, a one-liner on impact."
+  image: "assets/images/project1.jpg"
+  link: "https://github.com/username/project1"
+- title: "Project Two"
+  description: "…"
+  image: "assets/images/project2.jpg"
+  link: "…"
+# add as many as you like!

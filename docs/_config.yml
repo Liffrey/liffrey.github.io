@@ -1,17 +1,4 @@
 title: "Your Name"
-email: your.email@example.com
-description: "Academic portfolio, CV, and blog."
+description: "Portfolio of Your Name"
+baseurl: ""       # leave empty for username.github.io
 url: "https://username.github.io"
-baseurl: ""
-markdown: kramdown
-permalink: /:title/
-theme: null
-# Collections
-collections:
-  projects:
-    output: true
-plugins:
-  - jekyll-seo-tag
-google_analytics: "G-XXXXXXXXXX"   # replace or leave blank
-matomo_url: ""                     # e.g., https://analytics.example.com/
-matomo_site_id: ""                 # e.g., 3
