@@ -2,53 +2,51 @@
    assets/css/style.css
    ============================================ */
 
-/* 1. Reset & Box Sizing */
+/* 1. Reset & Box-Sizing */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 2. Color Palette (New Palette) */
+/* 2. Your 5-Color Palette */
 :root {
-  --bg: #f1faee;             /* light cream */
-  --text: #1d3557;           /* dark navy */
-  --accent: #e63946;         /* vibrant red */
-  --accent-alt: #457b9d;     /* medium blue */
-  --muted: #a8dadc;          /* soft teal */
-  --card-bg: #ffffff;        /* white cards */
-  --border: #a8dadc;         /* soft border */
+  /* Light Mode */
+  --bg:         #DA7B93;  /* pale rose */
+  --text:       #1C3334;  /* deep teal–black */
+  --accent:     #376E6F;  /* teal */
+  --accent-alt: #2F4454;  /* slate blue-grey */
+  --border:     #2E151B;  /* dark maroon */
 }
 
 [data-theme="dark"] {
-  --bg: #1d3557;             /* dark navy */
-  --text: #f1faee;           /* light cream */
-  --accent: #e63946;         /* vibrant red */
-  --accent-alt: #457b9d;     /* medium blue */
-  --muted: #a8dadc;          /* soft teal */
-  --card-bg: #457b9d;        /* medium blue for cards */
-  --border: #a8dadc;         /* soft border */
+  /* Dark Mode */
+  --bg:         #2E151B;  /* dark maroon */
+  --text:       #1C3334;  /* deep teal–black */
+  --accent:     #376E6F;  /* teal */
+  --accent-alt: #DA7B93;  /* pale rose */
+  --border:     #1C3334;  /* deep teal–black */
 }
 
 /* 3. Base Typography & Body */
 body {
   font-family: 'Inter', sans-serif;
-  background: var(--bg);
+  background-color: var(--bg);
   color: var(--text);
   line-height: 1.6;
   transition: background .3s, color .3s;
 }
 
-/* 4. Container */
+/* 4. Container for Centering */
 .container {
   max-width: 900px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
 
-/* 5. Site Header & Navigation */
+/* 5. Site Header & Nav */
 .site-header {
-  background: var(--card-bg);
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 .nav {
@@ -65,7 +63,7 @@ body {
 .nav .logo {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--accent-alt);
+  color: var(--accent);
   text-decoration: none;
 }
 .nav-links {
@@ -74,8 +72,8 @@ body {
   gap: 1.5rem;
 }
 .nav-links a {
-  text-decoration: none;
   color: var(--text);
+  text-decoration: none;
   font-weight: 500;
 }
 .nav-links a:hover {
@@ -86,13 +84,13 @@ body {
 .social-links {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: .75rem;
 }
 .social-links a {
   width: 1.25rem;
   height: 1.25rem;
-  color: var(--muted);
-  transition: color 0.3s;
+  color: var(--text);
+  transition: color .3s;
 }
 .social-links a:hover {
   color: var(--accent);
@@ -103,7 +101,7 @@ body {
   fill: currentColor;
 }
 
-/* 7. Theme Switch */
+/* 7. Theme-Switch Slider */
 .theme-switch-wrapper {
   margin-left: 1rem;
 }
@@ -120,34 +118,37 @@ body {
 }
 .theme-switch .slider {
   position: absolute;
-  cursor: pointer;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: var(--border);
-  transition: .4s;
+  background: var(--border);
   border-radius: 34px;
+  transition: .4s;
 }
 .theme-switch .slider:before {
-  position: absolute;
   content: "";
+  position: absolute;
   height: 18px; width: 18px;
   left: 3px; bottom: 3px;
-  background-color: var(--card-bg);
-  transition: .4s;
+  background: var(--bg);
   border-radius: 50%;
+  transition: .4s;
 }
 .theme-switch input:checked + .slider {
-  background-color: var(--accent);
+  background: var(--accent);
 }
 .theme-switch input:checked + .slider:before {
   transform: translateX(20px);
 }
 
-/* 8. Hero Section (Grey-Toned Removed) */
+/* 8. Hero Section */
 .hero {
   text-align: center;
   padding: 8rem 1rem;
-  background: linear-gradient(135deg, var(--accent-alt), var(--accent));
-  color: var(--bg);
+  background: linear-gradient(
+    135deg,
+    var(--accent-alt) 0%,
+    var(--accent) 100%
+  );
+  color: #fff; /* white text for maximum contrast on dark gradient */
   border-radius: 8px;
 }
 .hero h1 {
@@ -156,11 +157,11 @@ body {
   line-height: 1.2;
 }
 .hero span {
-  color: var(--muted);
+  color: #f1faee; /* very pale cream for a second pop on gradient */
 }
 .hero p {
   font-size: 1.25rem;
-  opacity: .9;
+  opacity: .85;
 }
 
 /* 9. Buttons */
@@ -169,8 +170,8 @@ body {
   display: inline-block;
   margin-top: 1rem;
   padding: .65rem 1.25rem;
-  background: var(--accent-alt);
-  color: var(--bg);
+  background: var(--accent);
+  color: #f1faee;   /* pale cream (outside your 5, but needed for legibility) */
   border-radius: .375rem;
   text-decoration: none;
   font-weight: 500;
@@ -178,7 +179,7 @@ body {
 }
 .btn:hover,
 .card-btn:hover {
-  background: var(--accent);
+  background: var(--accent-alt);
 }
 
 /* 10. Portfolio Grid & Cards */
@@ -189,7 +190,7 @@ body {
   margin-top: 2rem;
 }
 .card {
-  background: var(--card-bg);
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: .5rem;
   overflow: hidden;
@@ -197,7 +198,7 @@ body {
 }
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 .card img {
   width: 100%;
@@ -210,33 +211,30 @@ body {
 .card h3 {
   margin: 0 0 .5rem;
   font-size: 1.375rem;
-  color: var(--accent-alt);
+  color: var(--accent);
 }
 .card p {
   margin-bottom: 1rem;
-  color: var(--muted);
+  color: var(--text);
 }
 
 /* 11. Footer */
 .site-footer {
-  background: var(--card-bg);
+  background: var(--bg);
   border-top: 1px solid var(--border);
   padding: 1rem 0;
   text-align: center;
 }
 .site-footer p {
-  color: var(--muted);
+  color: var(--text);
   font-size: .9rem;
 }
 
 /* 12. Mobile Adjustments */
 @media (max-width: 600px) {
-  /* Hero */
   .hero {
     padding: 6rem 1rem;
   }
-
-  /* Nav: stack and center */
   .nav {
     flex-direction: column;
     align-items: center;
@@ -251,7 +249,6 @@ body {
   }
   .nav-links {
     flex-direction: column;
-    align-items: center;
     gap: 1rem;
   }
 }
