@@ -1,7 +1,7 @@
 /* ============================================
    assets/css/style.css
-   — Rebuilt with Dracula theme colors
-   https://draculatheme.com
+   — Now uses prefers-color-scheme for light/dark
+   — Dark-mode toggle removed
    ============================================ */
 
 /* 1. Reset & Box-Sizing */
@@ -11,16 +11,29 @@
   box-sizing: border-box;
 }
 
-/* 2. Dracula Palette */
+/* 2. Core Palette (Dracula light + dark via media query) */
 :root {
-  --bg:         #282a36; /* Dark background */
-  --fg:         #f8f8f2; /* Bright foreground */
-  --muted:      #6272a4; /* Comments / secondary text */
-  --accent-pink:  #ff79c6; /* Pink accent */
-  --accent-cyan:  #8be9fd; /* Cyan accent */
-  --accent-purple:#bd93f9; /* Purple accent */
-  --current-line:#44475a; /* Card background / lines */
-  --border:      #44475a; /* Borders */
+  --bg:            #f8f8f2;  /* light background */
+  --fg:            #282a36;  /* dark foreground text */
+  --muted:         #6272a4;  /* secondary text */
+  --accent-pink:   #ff79c6;
+  --accent-cyan:   #8be9fd;
+  --accent-purple: #bd93f9;
+  --current-line:  #44475a;  /* card/background */
+  --border:        #44475a;
+}
+
+@media(prefers-color-scheme: dark) {
+  :root {
+    --bg:            #282a36;
+    --fg:            #f8f8f2;
+    --muted:         #6272a4;
+    --accent-pink:   #ff79c6;
+    --accent-cyan:   #8be9fd;
+    --accent-purple: #bd93f9;
+    --current-line:  #44475a;
+    --border:        #44475a;
+  }
 }
 
 /* 3. Base Typography */
@@ -32,14 +45,14 @@ body {
   transition: background .3s, color .3s;
 }
 
-/* 4. Centered Container */
+/* 4. Container */
 .container {
   max-width: 900px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
 
-/* 5. Site Header & Navigation */
+/* 5. Header & Nav */
 .site-header {
   background: var(--bg);
   border-bottom: 1px solid var(--border);
@@ -49,6 +62,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
+  flex-wrap: wrap;
 }
 .nav-left {
   display: flex;
@@ -96,7 +110,7 @@ body {
   fill: currentColor;
 }
 
-/* 7. Hero Section */
+/* 7. Hero */
 .hero {
   text-align: center;
   padding: 8rem 1rem;
@@ -185,15 +199,13 @@ body {
   font-size: .9rem;
 }
 
-/* 11. Responsive */
+/* 11. Mobile Tweaks */
 @media (max-width: 600px) {
-  .hero {
-    padding: 6rem 1rem;
-  }
   .nav {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    padding: 1rem;
   }
   .nav-left,
   .social-links {
@@ -203,5 +215,8 @@ body {
   .nav-links {
     flex-direction: column;
     gap: 1rem;
+  }
+  .hero {
+    padding: 6rem 1rem;
   }
 }
