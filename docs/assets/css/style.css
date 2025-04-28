@@ -1,5 +1,7 @@
 /* ============================================
    assets/css/style.css
+   — Rebuilt with Dracula theme colors
+   https://draculatheme.com
    ============================================ */
 
 /* 1. Reset & Box-Sizing */
@@ -9,42 +11,35 @@
   box-sizing: border-box;
 }
 
-/* 2. Your 5-Color Palette */
+/* 2. Dracula Palette */
 :root {
-  /* Light Mode */
-  --bg:         #DA7B93;  /* pale rose */
-  --text:       #1C3334;  /* deep teal–black */
-  --accent:     #376E6F;  /* teal */
-  --accent-alt: #2F4454;  /* slate blue-grey */
-  --border:     #2E151B;  /* dark maroon */
+  --bg:         #282a36; /* Dark background */
+  --fg:         #f8f8f2; /* Bright foreground */
+  --muted:      #6272a4; /* Comments / secondary text */
+  --accent-pink:  #ff79c6; /* Pink accent */
+  --accent-cyan:  #8be9fd; /* Cyan accent */
+  --accent-purple:#bd93f9; /* Purple accent */
+  --current-line:#44475a; /* Card background / lines */
+  --border:      #44475a; /* Borders */
 }
 
-[data-theme="dark"] {
-  /* Dark Mode */
-  --bg:         #2E151B;  /* dark maroon */
-  --text:       #1C3334;  /* deep teal–black */
-  --accent:     #376E6F;  /* teal */
-  --accent-alt: #DA7B93;  /* pale rose */
-  --border:     #1C3334;  /* deep teal–black */
-}
-
-/* 3. Base Typography & Body */
+/* 3. Base Typography */
 body {
+  background: var(--bg);
+  color: var(--fg);
   font-family: 'Inter', sans-serif;
-  background-color: var(--bg);
-  color: var(--text);
   line-height: 1.6;
   transition: background .3s, color .3s;
 }
 
-/* 4. Container for Centering */
+/* 4. Centered Container */
 .container {
   max-width: 900px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
 
-/* 5. Site Header & Nav */
+/* 5. Site Header & Navigation */
 .site-header {
   background: var(--bg);
   border-bottom: 1px solid var(--border);
@@ -55,29 +50,29 @@ body {
   justify-content: space-between;
   padding: 1rem 2rem;
 }
-.nav .nav-left {
+.nav-left {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
-.nav .logo {
+.logo {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-pink);
   text-decoration: none;
 }
 .nav-links {
-  list-style: none;
   display: flex;
   gap: 1.5rem;
+  list-style: none;
 }
 .nav-links a {
-  color: var(--text);
+  color: var(--fg);
   text-decoration: none;
   font-weight: 500;
 }
 .nav-links a:hover {
-  color: var(--accent);
+  color: var(--accent-cyan);
 }
 
 /* 6. Social Icons */
@@ -89,11 +84,11 @@ body {
 .social-links a {
   width: 1.25rem;
   height: 1.25rem;
-  color: var(--text);
+  color: var(--muted);
   transition: color .3s;
 }
 .social-links a:hover {
-  color: var(--accent);
+  color: var(--accent-pink);
 }
 .social-links svg {
   width: 100%;
@@ -101,77 +96,37 @@ body {
   fill: currentColor;
 }
 
-/* 7. Theme-Switch Slider */
-.theme-switch-wrapper {
-  margin-left: 1rem;
-}
-.theme-switch {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 24px;
-}
-.theme-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-.theme-switch .slider {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: var(--border);
-  border-radius: 34px;
-  transition: .4s;
-}
-.theme-switch .slider:before {
-  content: "";
-  position: absolute;
-  height: 18px; width: 18px;
-  left: 3px; bottom: 3px;
-  background: var(--bg);
-  border-radius: 50%;
-  transition: .4s;
-}
-.theme-switch input:checked + .slider {
-  background: var(--accent);
-}
-.theme-switch input:checked + .slider:before {
-  transform: translateX(20px);
-}
-
-/* 8. Hero Section */
+/* 7. Hero Section */
 .hero {
   text-align: center;
   padding: 8rem 1rem;
-  background: linear-gradient(
-    135deg,
-    var(--accent-alt) 0%,
-    var(--accent) 100%
-  );
-  color: #fff; /* white text for maximum contrast on dark gradient */
+  background: var(--current-line);
   border-radius: 8px;
+  color: var(--fg);
 }
 .hero h1 {
   font-size: 3rem;
   margin-bottom: .5rem;
-  line-height: 1.2;
+  color: var(--accent-purple);
 }
 .hero span {
-  color: #f1faee; /* very pale cream for a second pop on gradient */
+  color: var(--accent-pink);
 }
 .hero p {
   font-size: 1.25rem;
-  opacity: .85;
+  color: var(--muted);
+  opacity: .9;
 }
 
-/* 9. Buttons */
+/* 8. Buttons */
 .btn,
 .card-btn {
   display: inline-block;
   margin-top: 1rem;
   padding: .65rem 1.25rem;
-  background: var(--accent);
-  color: #f1faee;   /* pale cream (outside your 5, but needed for legibility) */
+  background: var(--accent-pink);
+  color: var(--fg);
+  border: none;
   border-radius: .375rem;
   text-decoration: none;
   font-weight: 500;
@@ -179,18 +134,18 @@ body {
 }
 .btn:hover,
 .card-btn:hover {
-  background: var(--accent-alt);
+  background: var(--accent-cyan);
 }
 
-/* 10. Portfolio Grid & Cards */
+/* 9. Portfolio Grid & Cards */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
   gap: 2rem;
   margin-top: 2rem;
 }
 .card {
-  background: var(--bg);
+  background: var(--current-line);
   border: 1px solid var(--border);
   border-radius: .5rem;
   overflow: hidden;
@@ -198,7 +153,7 @@ body {
 }
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 .card img {
   width: 100%;
@@ -211,14 +166,14 @@ body {
 .card h3 {
   margin: 0 0 .5rem;
   font-size: 1.375rem;
-  color: var(--accent);
+  color: var(--accent-purple);
 }
 .card p {
   margin-bottom: 1rem;
-  color: var(--text);
+  color: var(--fg);
 }
 
-/* 11. Footer */
+/* 10. Footer */
 .site-footer {
   background: var(--bg);
   border-top: 1px solid var(--border);
@@ -226,11 +181,11 @@ body {
   text-align: center;
 }
 .site-footer p {
-  color: var(--text);
+  color: var(--muted);
   font-size: .9rem;
 }
 
-/* 12. Mobile Adjustments */
+/* 11. Responsive */
 @media (max-width: 600px) {
   .hero {
     padding: 6rem 1rem;
@@ -239,13 +194,11 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    padding: 1rem;
   }
-  .nav .nav-left,
-  .social-links,
-  .theme-switch-wrapper {
-    width: 100%;
+  .nav-left,
+  .social-links {
     justify-content: center;
+    width: 100%;
   }
   .nav-links {
     flex-direction: column;
