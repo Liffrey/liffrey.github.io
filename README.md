@@ -1,7 +1,5 @@
 
 # Links
-- Original 
-  - https://academicpages.github.io/
 
 # Installation Steps (not on GitHub Pages, to serve on your own computer)
 - Clone the repository and made updates as detailed above

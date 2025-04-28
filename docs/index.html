@@ -10,20 +10,12 @@ layout: none
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <nav class="nav">
-    <div class="logo">{{ site.title }}</div>
-    <div>
-      <a href="/">Home</a>
-      <a href="/portfolio.html">Portfolio</a>
-      <a href="/cv.html">CV</a>
-      <button id="theme-toggle">🌓</button>
-    </div>
-  </nav>
+  {% include nav.html %}
 
   <section class="hero">
     <h1>Hi, I’m <span>Your Name</span></h1>
     <p>Short, punchy tagline about what you do.</p>
-    <a class="btn" href="/portfolio.html">See My Work</a>
+    <a class="btn" href="{{ '/portfolio.html' | relative_url }}">See My Work</a>
   </section>
 
   <script src="assets/js/theme-toggle.js"></script>
