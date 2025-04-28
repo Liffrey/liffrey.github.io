@@ -1,14 +1,14 @@
 <nav class="nav">
-  <div class="logo">{{ site.title }}</div>
-  <div class="links">
-    <a href="{{ '/' | relative_url }}">Home</a>
-    <a href="{{ '/portfolio/' | relative_url }}">Portfolio</a>
-    <a href="{{ '/cv/' | relative_url }}">CV</a>
-    <div class="theme-switch-wrapper">
-      <label class="theme-switch" for="theme-toggle">
-        <input type="checkbox" id="theme-toggle" />
-        <span class="slider round"></span>
-      </label>
-    </div>
+  <a class="logo" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+  <ul class="nav-links">
+    <li><a href="{{ '/' | relative_url }}">Home</a></li>
+    <li><a href="{{ '/portfolio/' | relative_url }}">Portfolio</a></li>
+    <li><a href="{{ '/cv/' | relative_url }}">CV</a></li>
+  </ul>
+  <div class="theme-switch-wrapper">
+    <label class="theme-switch" for="theme-toggle">
+      <input type="checkbox" id="theme-toggle" />
+      <span class="slider"></span>
+    </label>
   </div>
 </nav>

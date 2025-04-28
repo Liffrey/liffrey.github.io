@@ -9,23 +9,25 @@
   box-sizing: border-box;
 }
 
-/* 2. Color Palette (Academic: Navy, Grey, Black) */
+/* 2. Color Palette */
 :root {
-  --bg: #f5f5f5;           /* light grey page background */
-  --text: #1a1a1a;         /* almost black text */
-  --accent: #001f3f;       /* deep navy primary */
-  --accent-alt: #333333;   /* dark grey secondary */
-  --card-bg: #ffffff;      /* white for cards and sections */
-  --border: #cccccc;       /* mid grey borders */
+  --bg: #fafafa;             /* soft off-white */
+  --text: #2e2e2e;           /* dark charcoal */
+  --accent: #0077b6;         /* vibrant teal-blue */
+  --accent-alt: #00b4d8;     /* light cyan accent */
+  --muted: #6c757d;          /* medium gray for secondary text */
+  --card-bg: #ffffff;        /* white cards */
+  --border: #e0e0e0;         /* light gray borders */
 }
 
 [data-theme="dark"] {
-  --bg: #1a1a1a;
-  --text: #f5f5f5;
-  --accent: #001f3f;
-  --accent-alt: #4a4a4a;
-  --card-bg: #2a2a2a;
-  --border: #444444;
+  --bg: #181a1b;
+  --text: #e8e6e3;
+  --accent: #00b4d8;
+  --accent-alt: #0077b6;
+  --muted: #adb5bd;
+  --card-bg: #242526;
+  --border: #3a3b3c;
 }
 
 /* 3. Base Typography & Body */
@@ -37,70 +39,66 @@ body {
   transition: background .3s, color .3s;
 }
 
-/* 4. Centered Container */
+/* 4. Container */
 .container {
   max-width: 900px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
 
-/* 5. Navigation Bar */
-.nav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem 2rem;
+/* 5. Navigation */
+.site-header {
   background: var(--card-bg);
   border-bottom: 1px solid var(--border);
 }
-
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .nav .logo {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--accent);
-  margin-right: 2rem;
+  text-decoration: none;
 }
-
-.nav .links {
+.nav-links {
+  list-style: none;
   display: flex;
-  align-items: center;
   gap: 1.5rem;
 }
-
-.nav .links a {
+.nav-links a {
   text-decoration: none;
   color: var(--text);
   font-weight: 500;
 }
-
-/* 6. Dark/Light Theme Switch */
-.theme-switch-wrapper {
-  display: inline-block;
-  margin-left: 1rem;
+.nav-links a:hover {
+  color: var(--accent);
 }
 
+/* 6. Theme Switch */
+.theme-switch-wrapper {
+  margin-left: 1rem;
+}
 .theme-switch {
   position: relative;
   display: inline-block;
-  width: 50px;
+  width: 44px;
   height: 24px;
 }
-
 .theme-switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
-
 .theme-switch .slider {
   position: absolute;
   cursor: pointer;
   top: 0; left: 0; right: 0; bottom: 0;
   background-color: var(--border);
   transition: .4s;
-  border-radius: 24px;
+  border-radius: 34px;
 }
-
 .theme-switch .slider:before {
   position: absolute;
   content: "";
@@ -110,43 +108,40 @@ body {
   transition: .4s;
   border-radius: 50%;
 }
-
 .theme-switch input:checked + .slider {
   background-color: var(--accent);
 }
-
 .theme-switch input:checked + .slider:before {
-  transform: translateX(26px);
+  transform: translateX(20px);
 }
 
-/* 7. Hero Section */
+/* 7. Hero */
 .hero {
   text-align: center;
   padding: 8rem 1rem;
   background: var(--accent);
   color: #fff;
+  border-radius: 8px;
 }
-
 .hero h1 {
   font-size: 3rem;
   margin-bottom: .5rem;
   line-height: 1.2;
 }
-
 .hero span {
-  color: #ffeb3b;
+  color: var(--accent-alt);
 }
-
 .hero p {
   font-size: 1.25rem;
   opacity: .9;
 }
 
-/* 8. Button Styles */
-.btn {
+/* 8. Buttons */
+.btn,
+.card-btn {
   display: inline-block;
   margin-top: 1rem;
-  padding: .75rem 1.5rem;
+  padding: .65rem 1.25rem;
   background: var(--accent-alt);
   color: #fff;
   border-radius: .375rem;
@@ -154,19 +149,18 @@ body {
   font-weight: 500;
   transition: background .3s;
 }
-
-.btn:hover {
+.btn:hover,
+.card-btn:hover {
   background: var(--accent);
 }
 
-/* 9. Portfolio Grid & Cards (Academic Layout) */
+/* 9. Grid & Cards */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2.5rem;
-  padding-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
 }
-
 .card {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -174,52 +168,43 @@ body {
   overflow: hidden;
   transition: transform .2s, box-shadow .2s;
 }
-
 .card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
-
 .card img {
   width: 100%;
-  display: block;
-  object-fit: cover;
   height: 180px;
+  object-fit: cover;
 }
-
 .card-content {
-  padding: 1.25rem;
+  padding: 1rem 1.25rem 1.5rem;
 }
-
 .card h3 {
   margin: 0 0 .5rem;
-  font-size: 1.5rem;
+  font-size: 1.375rem;
   color: var(--accent);
 }
-
 .card p {
   margin-bottom: 1rem;
-  font-size: 1rem;
-  color: var(--text);
+  color: var(--muted);
 }
 
-.card a {
-  font-weight: 600;
-  text-decoration: none;
-  color: var(--accent-alt);
+/* 10. Footer */
+.site-footer {
+  background: var(--card-bg);
+  border-top: 1px solid var(--border);
+  padding: 1rem 0;
+  text-align: center;
+}
+.site-footer p {
+  color: var(--muted);
+  font-size: .9rem;
 }
 
-/* 10. Responsive Adjustments */
+/* 11. Responsive */
 @media (max-width: 600px) {
-  .nav {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 1rem;
-  }
-  .nav .links {
-    margin-top: .5rem;
-  }
-  .hero {
-    padding: 6rem 1rem;
-  }
+  .hero { padding: 6rem 1rem; }
+  .nav { flex-direction: column; align-items: flex-start; gap: .5rem; }
+  .nav-links { flex-direction: column; gap: .75rem; }
 }

@@ -8,7 +8,4 @@ permalink: /cv/
 
 [Download PDF](assets/files/YourName_CV.pdf){: .btn }
 
-<!--
-  You can also embed your CV in Markdown here,
-  section by section—education, experience, skills, etc.
--->
+<!-- You can expand your CV in Markdown here: sections for Education, Experience, Skills, etc. -->
