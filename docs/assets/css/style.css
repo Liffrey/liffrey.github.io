@@ -9,23 +9,23 @@
   box-sizing: border-box;
 }
 
-/* 2. Color Palette */
+/* 2. Color Palette (Academic: Navy, Grey, Black) */
 :root {
-  --bg: #f0f2f5;
-  --text: #1a1a1a;
-  --accent: #0066cc;
-  --accent-alt: #3399ff;
-  --card-bg: #ffffff;
-  --border: #ddd;
+  --bg: #f5f5f5;           /* light grey page background */
+  --text: #1a1a1a;         /* almost black text */
+  --accent: #001f3f;       /* deep navy primary */
+  --accent-alt: #333333;   /* dark grey secondary */
+  --card-bg: #ffffff;      /* white for cards and sections */
+  --border: #cccccc;       /* mid grey borders */
 }
 
 [data-theme="dark"] {
-  --bg: #121212;
-  --text: #e0e0e0;
-  --accent: #3399ff;
-  --accent-alt: #66b2ff;
-  --card-bg: #1e1e1e;
-  --border: #333;
+  --bg: #1a1a1a;
+  --text: #f5f5f5;
+  --accent: #001f3f;
+  --accent-alt: #4a4a4a;
+  --card-bg: #2a2a2a;
+  --border: #444444;
 }
 
 /* 3. Base Typography & Body */
@@ -57,6 +57,7 @@ body {
 .nav .logo {
   font-size: 1.5rem;
   font-weight: 700;
+  color: var(--accent);
   margin-right: 2rem;
 }
 
@@ -94,10 +95,7 @@ body {
 .theme-switch .slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   background-color: var(--border);
   transition: .4s;
   border-radius: 24px;
@@ -106,10 +104,8 @@ body {
 .theme-switch .slider:before {
   position: absolute;
   content: "";
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
+  height: 18px; width: 18px;
+  left: 3px; bottom: 3px;
   background-color: var(--card-bg);
   transition: .4s;
   border-radius: 50%;
@@ -127,7 +123,7 @@ body {
 .hero {
   text-align: center;
   padding: 8rem 1rem;
-  background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+  background: var(--accent);
   color: #fff;
 }
 
@@ -163,53 +159,54 @@ body {
   background: var(--accent);
 }
 
-/* 9. Portfolio Grid & Cards */
+/* 9. Portfolio Grid & Cards (Academic Layout) */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
   padding-bottom: 2rem;
 }
 
 .card {
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: .75rem;
+  border-radius: .5rem;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   transition: transform .2s, box-shadow .2s;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .card img {
   width: 100%;
   display: block;
   object-fit: cover;
+  height: 180px;
+}
+
+.card-content {
+  padding: 1.25rem;
 }
 
 .card h3 {
-  padding: 1rem;
-  margin: 0;
-  font-size: 1.25rem;
+  margin: 0 0 .5rem;
+  font-size: 1.5rem;
+  color: var(--accent);
 }
 
 .card p {
-  padding: 0 1rem 1rem;
+  margin-bottom: 1rem;
   font-size: 1rem;
-  line-height: 1.4;
+  color: var(--text);
 }
 
 .card a {
-  display: block;
-  padding: .75rem 1rem;
-  border-top: 1px solid var(--border);
+  font-weight: 600;
   text-decoration: none;
-  color: var(--accent);
-  font-weight: 500;
+  color: var(--accent-alt);
 }
 
 /* 10. Responsive Adjustments */
@@ -219,8 +216,10 @@ body {
     align-items: flex-start;
     padding: 1rem;
   }
-
   .nav .links {
     margin-top: .5rem;
+  }
+  .hero {
+    padding: 6rem 1rem;
   }
 }
