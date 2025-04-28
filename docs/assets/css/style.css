@@ -1,73 +1,175 @@
-:root {
-  --bg: #ffffff;
-  --text: #222222;
-  --accent: #007acc;
-}
-[data-theme="dark"] {
-  --bg: #121212;
-  --text: #eeeeee;
-  --accent: #1e90ff;
-}
-
-* { margin:0; padding:0; box-sizing:border-box; }
+/* 1) Modern Google Font */
 body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, sans-serif;
-  line-height:1.6;
   transition: background .3s, color .3s;
 }
+
+/* 2) Centered container with side margins */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* 3) Color Palette */
+:root {
+  --bg: #f9f9f9;
+  --text: #333333;
+  --accent: #1a73e8;
+  --accent-hover: #1558b1;
+  --card-bg: #ffffff;
+  --border: #e0e0e0;
+}
+[data-theme="dark"] {
+  --bg: #181818;
+  --text: #e0e0e0;
+  --accent: #8ab4f8;
+  --accent-hover: #669df6;
+  --card-bg: #242424;
+  --border: #3c3c3c;
+}
+
+/* 4) Navigation */
 .nav {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
 }
-.nav .links a,
-.nav .links button {
+.nav .logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+.nav .links a {
+  margin-left: 1rem;
+  text-decoration: none;
   color: var(--text);
-  margin-left:1rem;
-  text-decoration:none;
-  font-weight:500;
+  font-weight: 500;
 }
+
+/* 5) Theme-switch styling */
+.theme-switch-wrapper {
+  display: inline-block;
+  margin-left: 1rem;
+}
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+.theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--border);
+  transition: .4s;
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--card-bg);
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: var(--accent);
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* 6) Hero & Buttons */
 .hero {
-  text-align:center;
-  padding:4rem 1rem;
+  text-align: center;
+  padding: 6rem 1rem;
 }
-.hero span { color: var(--accent); }
-.btn {
-  display:inline-block;
-  margin-top:1rem;
-  padding:.75rem 1.5rem;
-  background: var(--accent);
-  color:#fff;
-  border:none;
-  border-radius:.375rem;
-  text-decoration:none;
-}
-.grid {
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap:1.5rem;
-  padding:2rem;
-}
-.card {
-  background: var(--bg);
-  border: 1px solid #ddd;
-  border-radius:.5rem;
-  overflow:hidden;
-  transition: transform .2s;
-}
-.card:hover { transform: translateY(-5px); }
-.card img { width:100%; display:block; }
-.card h3 { padding:.5rem 1rem; }
-.card p { padding:0 1rem 1rem; }
-.card a {
-  display:block;
-  padding:.5rem 1rem;
-  border-top:1px solid #eee;
-  text-decoration:none;
+.hero span {
   color: var(--accent);
 }
-@media (max-width:600px) {
-  .hero { padding:2rem 1rem; }
-  .nav { flex-direction:column; }
+.btn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: .75rem 1.5rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: .375rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background .3s;
+}
+.btn:hover {
+  background: var(--accent-hover);
+}
+
+/* 7) Grid & Cards */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  padding-bottom: 2rem;
+}
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: .75rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform .2s, box-shadow .2s;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+.card img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+.card h3 {
+  padding: 1rem;
+  margin: 0;
+  font-size: 1.25rem;
+}
+.card p {
+  padding: 0 1rem 1rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+.card a {
+  display: block;
+  padding: .75rem 1rem;
+  border-top: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* 8) Responsive tweaks */
+@media (max-width: 600px) {
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+  .nav .links {
+    margin-top: .5rem;
+  }
 }

@@ -1,9 +1,11 @@
-const btn = document.getElementById('theme-toggle');
-const stored = localStorage.getItem('theme') || 'light';
-document.documentElement.setAttribute('data-theme', stored);
+const toggleSwitch = document.getElementById('theme-toggle');
+const currentTheme = localStorage.getItem('theme') || 'light';
 
-btn.addEventListener('click', () => {
-  const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
+document.documentElement.setAttribute('data-theme', currentTheme);
+toggleSwitch.checked = currentTheme === 'dark';
+
+toggleSwitch.addEventListener('change', () => {
+  const theme = toggleSwitch.checked ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
 });

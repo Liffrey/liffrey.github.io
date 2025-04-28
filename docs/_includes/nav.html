@@ -2,9 +2,15 @@
     <div class="logo">{{ site.title }}</div>
     <div class="links">
       <a href="{{ '/' | relative_url }}">Home</a>
-      <a href="{{ '/portfolio.html' | relative_url }}">Portfolio</a>
-      <a href="{{ '/cv.html' | relative_url }}">CV</a>
-      <button id="theme-toggle">🌓</button>
+      <a href="{{ '/portfolio/' | relative_url }}">Portfolio</a>
+      <a href="{{ '/cv/' | relative_url }}">CV</a>
+  
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="theme-toggle">
+          <input type="checkbox" id="theme-toggle" />
+          <span class="slider round"></span>
+        </label>
+      </div>
     </div>
   </nav>
   
