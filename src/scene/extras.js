@@ -4,6 +4,8 @@ import { CALENDAR_COLORS } from '../lib/render.js';
 // Objects that are not in the mockup: commit calendar (part of Tech), CV folder, wall phone.
 export function build(kit, data, techZone) {
   const { box } = kit;
+  // invisible, larger click target for objects that are only a few pixels on screen (rays still hit hidden meshes)
+  const hitArea = (w, h, d, x, y, z, parent) => { const m = box(w, h, d, '#000000', x, y, z, parent); m.visible = false; };
 
   // commit calendar on the back wall above the shelf
   const { grid } = data.calendar;
@@ -21,12 +23,14 @@ export function build(kit, data, techZone) {
   const cv = kit.zone('cv', 'CV');
   box(0.42, 0.03, 0.32, '#e8c060', 0.4, 1.49, -3.05, cv);
   box(0.36, 0.01, 0.28, '#f4f0e8', 0.43, 1.51, -3.07, cv).rotation.y = 0.12;
+  hitArea(0.6, 0.25, 0.5, 0.4, 1.55, -3.05, cv);
 
   // wall phone on the left wall, above the arcade cabinet
   const contact = kit.zone('contact', 'Contact');
   box(0.08, 0.4, 0.25, '#c04040', -3.96, 3.0, -2.3, contact);
   box(0.07, 0.36, 0.08, '#d05050', -3.885, 3.0, -2.39, contact);
   box(0.02, 0.1, 0.1, '#e8e0d0', -3.91, 3.06, -2.24, contact);
+  hitArea(0.15, 0.8, 0.55, -3.92, 2.95, -2.3, contact);
   for (const [y, z] of [[2.78, -2.39], [2.7, -2.36], [2.64, -2.31], [2.72, -2.26]]) box(0.03, 0.05, 0.03, '#2a2a2a', -3.9, y, z, contact);
 
   return { cv, contact, calendar };

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { sampleTime, routineAt, formatHour, parseHourParam } from '../src/lib/time.js';
+import { sampleTime, routineAt, formatHour, parseHourParam, localHour } from '../src/lib/time.js';
 
 test('midnight is night with lamps dimmed for the film', () => {
   const t = sampleTime(0);
@@ -40,4 +40,12 @@ test('parseHourParam rejects junk', () => {
   for (const s of [null, '', ' ', 'abc', '24', '-1', '30']) assert.equal(parseHourParam(s), null, String(s));
   assert.equal(parseHourParam('20.5'), 20.5);
   assert.equal(parseHourParam('0'), 0);
+});
+test('formatHour shows the real clock for every minute of the day', () => {
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m < 60; m++) {
+      const want = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+      assert.equal(formatHour(localHour(new Date(2026, 0, 1, h, m))), want);
+    }
+  }
 });

@@ -8,9 +8,10 @@ import { build as buildCinema } from './cinema.js';
 import { build as buildExtras } from './extras.js';
 import { applyTime } from './lighting.js';
 import { makePost } from './post.js';
+import { initPick } from './pick.js';
 
 // Builds the room into `stage` and runs it. Throws if WebGL is unavailable; the caller keeps the still image then.
-export async function start(stage, data, { hour = null, reducedMotion = false } = {}) {
+export async function start(stage, data, { hour = null, reducedMotion = false, onPick = () => {} } = {}) {
   const renderer = new THREE.WebGLRenderer({ antialias: false }); // throws without WebGL
   renderer.setPixelRatio(1);
   renderer.shadowMap.enabled = true;
@@ -19,9 +20,11 @@ export async function start(stage, data, { hour = null, reducedMotion = false } 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color('#0f0d18');
   // 2:1 pixel-art isometric: azimuth 45°, elevation 30°
-  const target = new THREE.Vector3(0, 1.6, 0);
+  const HOME = new THREE.Vector3(0, 1.6, 0), OFFSET = new THREE.Vector3(12.25, 10, 12.25);
+  const RIGHT = new THREE.Vector3(1, 0, -1).normalize(); // screen-right in this view
+  const target = HOME.clone();
   const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 60);
-  cam.position.copy(target).add(new THREE.Vector3(12.25, 10, 12.25));
+  cam.position.copy(target).add(OFFSET);
   cam.lookAt(target);
 
   const root = new THREE.Group();
@@ -44,9 +47,39 @@ export async function start(stage, data, { hour = null, reducedMotion = false } 
     cam.updateProjectionMatrix();
   }
 
+  const zones = Object.fromEntries(root.children.filter(g => g.userData.zone).map(g => [g.userData.zone, g]));
+  let flight = null;
+  function setView(to, zoom) {
+    target.copy(to);
+    cam.position.copy(target).add(OFFSET);
+    cam.zoom = zoom;
+    cam.updateProjectionMatrix();
+  }
+  function fly(to, zoom) {
+    return new Promise(resolve => {
+      flight?.resolve(); // a newer flight replaces the old one, starting from where the camera is now
+      if (reducedMotion) { flight = null; setView(to, zoom); resolve(); return; }
+      flight = { from: target.clone(), fromZoom: cam.zoom, to, zoom, t0: performance.now(), resolve };
+    });
+  }
+  function flyStep() {
+    if (!flight) return;
+    const k = Math.min(1, (performance.now() - flight.t0) / 700);
+    const e = k < 0.5 ? 4 * k * k * k : 1 - (-2 * k + 2) ** 3 / 2; // easeInOutCubic
+    setView(new THREE.Vector3().lerpVectors(flight.from, flight.to, e), flight.fromZoom + (flight.zoom - flight.fromZoom) * e);
+    if (k === 1) { const done = flight.resolve; flight = null; done(); }
+  }
+  function flyTo(name) {
+    const zoom = 2.2, to = new THREE.Box3().setFromObject(zones[name]).getCenter(new THREE.Vector3());
+    // wide screens show the panel on the right, so the object moves to the left half
+    if (stage.clientWidth >= 1100) to.addScaledVector(RIGHT, (cam.right - cam.left) / zoom * 0.22);
+    return fly(to, zoom);
+  }
+
   let fixed = hour;
   const motion = !reducedMotion;
   function frame(t = 0) {
+    flyStep();
     const s = t / 1000, h = fixed ?? localHour();
     applyTime(room, corners, sampleTime(h));
     const routine = routineAt(h);
@@ -59,9 +92,10 @@ export async function start(stage, data, { hour = null, reducedMotion = false } 
   frame();
   stage.append(renderer.domElement);
   new ResizeObserver(resize).observe(stage);
+  initPick(stage, renderer, cam, root, onPick);
   const loop = () => renderer.setAnimationLoop(document.hidden ? null : frame); // no drawing in a hidden tab
   document.addEventListener('visibilitychange', loop);
   loop();
 
-  return { setHour(h) { fixed = h; } };
+  return { setHour(h) { fixed = h; }, flyTo, flyHome: () => fly(HOME.clone(), 1) };
 }

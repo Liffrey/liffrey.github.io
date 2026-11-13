@@ -53,8 +53,10 @@ export function routineAt(h) {
   return 'night';
 }
 
-export const formatHour = h =>
-  String(Math.floor(h)).padStart(2, '0') + ':' + String(Math.floor((h % 1) * 60)).padStart(2, '0');
+export function formatHour(h) {
+  const minutes = Math.floor(h * 60 + 1e-6); // h = hours + minutes/60 loses a hair to rounding; don't show a minute early
+  return String(Math.floor(minutes / 60)).padStart(2, '0') + ':' + String(minutes % 60).padStart(2, '0');
+}
 
 export function parseHourParam(s) {
   if (s === null || s.trim() === '') return null;
