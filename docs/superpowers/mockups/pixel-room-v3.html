@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Piksel oda v3</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #0e0c15; color: #e8e4f0; font: 15px/1.5 system-ui, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 20px 16px 40px; }
+  h2 { margin: 0 0 4px; font-size: 22px; }
+  .sub { color: #a9a2b8; margin: 0 0 14px; }
+  #stage { position: relative; width: 100%; height: 66vh; min-height: 380px; border-radius: 10px; overflow: hidden; background: #0f0d18; }
+  #stage canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+  #clock { position: absolute; left: 12px; top: 10px; font: 600 20px/1 ui-monospace, monospace; background: #0008; padding: 6px 10px; border-radius: 6px; }
+  #tip { position: absolute; pointer-events: none; padding: 2px 8px; background: #000c; border-radius: 4px; font-size: 13px; display: none; }
+  #panel { position: absolute; right: 12px; top: 12px; width: min(300px, 80%); background: #0d0b14ee; border: 1px solid #3a3350; border-radius: 8px; padding: 12px 14px; display: none; }
+  #panel h3 { margin: 0 0 6px; }
+  .controls { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
+  .controls label { display: flex; gap: 8px; align-items: center; }
+  #hour { width: 260px; }
+  ul { color: #c9c2d8; padding-left: 20px; }
+  button { background: #2a2440; color: inherit; border: 1px solid #4a4266; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+  #panel button { margin-top: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <h2>Piksel oda v3: ışık günün saatine göre değişiyor</h2>
+  <p class="sub">Açılışta sizin yerel saatiniz kullanılıyor. Saati kaydırın ya da günü hızlı oynatın: sabah, öğle, gün batımı, mavi saat, gece.</p>
+
+  <div id="stage"><div id="clock"></div><div id="tip"></div>
+    <div id="panel"><h3 id="ptitle"></h3><div id="pbody"></div><button id="pclose">Kapat</button></div>
+  </div>
+
+  <div class="controls">
+    <label>Saat <input id="hour" type="range" min="0" max="23.95" step="0.05" value="12"></label>
+    <button id="now">Şimdi</button>
+    <label><input id="play" type="checkbox"> Günü hızlı oynat (30 sn)</label>
+  </div>
+  <div class="controls">
+    <label>Piksel boyutu <input id="px" type="range" min="1" max="6" step="1" value="3"> <b id="pxv">3</b></label>
+    <label><input id="ol" type="checkbox" checked> Kenar çizgisi</label>
+    <label><input id="di" type="checkbox" checked> Sınırlı palet + dither</label>
+  </div>
+
+  <ul>
+    <li>Güneş ya da ay pencerede gökte ilerliyor. Işık huzmesinin açısı ve rengi saate göre değişiyor: öğlen kısa ve beyaz, gün batımında uzun ve turuncu, gece mavi.</li>
+    <li>Gökyüzü, yıldızlar ve şehrin ışıkları saate göre değişiyor. Odanın lambaları akşam kendiliğinden yanıyor, sabah sönüyor. Sahnenin arka planı da gündüz açılıyor.</li>
+  </ul>
+</main>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
+<script type="module">
+import * as THREE from 'three';
+
+const stage = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ antialias: false });
+renderer.setPixelRatio(1);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.BasicShadowMap; // hard shadows suit pixel art
+stage.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#0f0d18');
+
+// 2:1 pixel-art isometric: azimuth 45 deg, elevation 30 deg
+const VIEW = 12;
+const target = new THREE.Vector3(0, 1.6, 0);
+const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 60);
+cam.position.copy(target).add(new THREE.Vector3(12.25, 10, 12.25));
+cam.lookAt(target);
+
+const room = new THREE.Group();
+scene.add(room);
+const noRay = () => {};
+const rnd = (() => { let s = 11; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+
+function box(w, h, d, color, x, y, z, parent = room, emissive) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d),
+    new THREE.MeshLambertMaterial({ color, emissive: emissive || '#000000' }));
+  m.position.set(x, y, z);
+  m.castShadow = m.receiveShadow = true;
+  parent.add(m);
+  return m;
+}
+function glowBox(w, h, d, color, x, y, z, parent = room) { // self-lit, casts no shadow
+  const m = box(w, h, d, '#000000', x, y, z, parent, color);
+  m.castShadow = false;
+  return m;
+}
+function flat(geo, color, x, y, z, parent = room) {
+  const m = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ color, flatShading: true }));
+  m.position.set(x, y, z);
+  m.castShadow = m.receiveShadow = true;
+  parent.add(m);
+  return m;
+}
+function sky(w, h, material, x, y, z) { // the outside: unlit, no shadows, not clickable
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), material);
+  m.position.set(x, y, z);
+  m.raycast = noRay;
+  scene.add(m);
+  return m;
+}
+function zone(name, title, body) {
+  const g = new THREE.Group();
+  Object.assign(g.userData, { zone: name, title, body });
+  room.add(g);
+  return g;
+}
+function point(color, intensity, dist, x, y, z, parent = room) {
+  const l = new THREE.PointLight(color, intensity, dist, 1.6);
+  l.position.set(x, y, z);
+  parent.add(l);
+  return l;
+}
+
+// ---------- lights that follow the time of day ----------
+const hemi = new THREE.HemisphereLight('#5a5a9a', '#2a1a22', 0.9);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight('#9ab8ff', 2.6); // sun by day, moon by night; always shines in through the window
+sun.target.position.set(1.2, 0, 1);
+scene.add(sun, sun.target);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -10, right: 10, top: 10, bottom: -10, near: 0.5, far: 45 });
+sun.shadow.camera.updateProjectionMatrix();
+sun.shadow.bias = -0.0005;
+sun.shadow.normalBias = 0.03;
+
+// ---------- shell ----------
+box(8, 0.38, 8, '#3a2a20', 0, -0.21, 0);
+const planks = ['#8a6a4f', '#80624a', '#8f7054'];
+for (let i = 0; i < 8; i++) box(8, 0.4, 0.96, planks[i % 3], 0, -0.2, -3.5 + i);
+const WALL = '#40345a', WALL2 = '#4a3d64';
+box(0.3, 4.5, 8.3, WALL2, -4.15, 2.25, -0.15);
+box(4.7, 4.5, 0.3, WALL, -1.95, 2.25, -4.15);
+box(1.6, 4.5, 0.3, WALL, 3.2, 2.25, -4.15);
+box(2.0, 2.9, 0.3, WALL, 1.4, 1.45, -4.15);
+box(2.0, 0.4, 0.3, WALL, 1.4, 4.3, -4.15);
+box(0.04, 1.2, 8, '#352a48', -3.98, 0.6, 0);
+box(8, 1.2, 0.04, '#30263f', 0, 0.6, -3.98);
+box(0.08, 0.06, 8, '#7a6890', -3.96, 1.22, 0);
+box(8, 0.06, 0.08, '#7a6890', 0, 1.22, -3.96);
+box(0.06, 0.2, 8, '#251d33', -3.97, 0.1, 0);
+box(8, 0.2, 0.06, '#251d33', 0, 0.1, -3.97);
+
+const FR = '#d8cbb0';
+box(2.3, 0.08, 0.5, FR, 1.4, 2.88, -3.95);
+box(2.1, 0.08, 0.36, FR, 1.4, 4.12, -4.15);
+box(0.08, 1.28, 0.36, FR, 0.38, 3.5, -4.15);
+box(0.08, 1.28, 0.36, FR, 2.42, 3.5, -4.15);
+box(0.05, 1.2, 0.05, FR, 1.4, 3.5, -4.15);
+box(2.0, 0.05, 0.05, FR, 1.4, 3.5, -4.15);
+box(0.35, 1.7, 0.1, '#7a3b5a', 0.12, 3.35, -3.88);
+box(0.35, 1.7, 0.1, '#7a3b5a', 2.68, 3.35, -3.88);
+box(0.16, 0.12, 0.16, '#b5653a', 0.75, 2.98, -3.85);
+box(0.1, 0.22, 0.1, '#4f9a4f', 0.75, 3.15, -3.85);
+
+// outside: only the part seen through the window exists
+const skyMat = new THREE.MeshBasicMaterial({ color: '#16234a' });
+sky(3.6, 2.1, skyMat, -0.45, 1.85, -6.05);
+const sunMat = new THREE.MeshBasicMaterial({ color: '#fff0b0', transparent: true });
+const moonMat = new THREE.MeshBasicMaterial({ color: '#f4f1d0', transparent: true });
+const sunDisc = sky(0.36, 0.36, sunMat, 0, 2, -5.95); sunDisc.geometry = new THREE.CircleGeometry(0.2, 12);
+const moonDisc = sky(0.3, 0.3, moonMat, 0, 2, -5.94); moonDisc.geometry = new THREE.CircleGeometry(0.16, 12);
+const starMat = new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true });
+for (let i = 0; i < 14; i++) sky(0.04, 0.04, starMat, -2 + rnd() * 3.2, 1.8 + rnd() * 1.0, -6.0);
+const cityMat = new THREE.MeshBasicMaterial({ color: '#0a1028' });
+const cityWinMat = new THREE.MeshBasicMaterial({ color: '#ffd27a' });
+for (const [x, top] of [[-1.5, 1.45], [-1.1, 1.75], [-0.65, 1.5], [-0.2, 1.85], [0.25, 1.55], [0.7, 1.7]]) {
+  sky(0.38, top - 0.8, cityMat, x, (top + 0.8) / 2, -5.98);
+  for (let wy = 0.95; wy < top - 0.1; wy += 0.14) for (const wx of [-0.08, 0.08]) if (rnd() > 0.45) sky(0.05, 0.05, cityWinMat, x + wx, wy, -5.97);
+}
+
+// light beam from the window to the floor, rebuilt when the sun moves; dust floats inside it
+const win = [[0.4, 2.9], [2.4, 2.9], [2.4, 4.1], [0.4, 4.1]];
+const dir = new THREE.Vector3();
+const floorPt = (x, y) => { const t = y / -dir.y; return [x + dir.x * t, 0.02, -4.0 + dir.z * t]; };
+const beamGeo = new THREE.BufferGeometry();
+beamGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(24), 3));
+beamGeo.setIndex([0, 1, 5, 0, 5, 4, 1, 2, 6, 1, 6, 5, 2, 3, 7, 2, 7, 6, 3, 0, 4, 3, 4, 7]);
+const beamMat = new THREE.MeshBasicMaterial({ color: '#5070b0', transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+const beam = new THREE.Mesh(beamGeo, beamMat);
+beam.raycast = noRay;
+beam.frustumCulled = false;
+scene.add(beam);
+function updateBeam() {
+  dir.subVectors(sun.target.position, sun.position).normalize();
+  const p = beamGeo.attributes.position;
+  win.forEach(([x, y], i) => { p.setXYZ(i, x, y, -4.0); p.setXYZ(i + 4, ...floorPt(x, y)); });
+  p.needsUpdate = true;
+}
+const DUST = 35, dustSeed = [], dustPos = new Float32Array(DUST * 3);
+for (let i = 0; i < DUST; i++) dustSeed.push([0.4 + rnd() * 2, 2.9 + rnd() * 1.2, rnd() * 0.9, rnd() * 6.28]);
+const dustGeo = new THREE.BufferGeometry();
+dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+const dustMat = new THREE.PointsMaterial({ color: '#8fa8e0', size: 1, sizeAttenuation: false, transparent: true, opacity: 0.35, depthWrite: false });
+const dust = new THREE.Points(dustGeo, dustMat);
+dust.raycast = noRay;
+dust.frustumCulled = false;
+scene.add(dust);
+
+// string lights
+const BULB = ['#ffcf6a', '#ff7a7a', '#7ad0ff', '#a0ff8a'], bulbs = [];
+for (let i = 0; i < 16; i++) {
+  const s = -3.75 + i * 0.5, sag = 4.25 - Math.abs(Math.sin(i * 0.8)) * 0.12;
+  bulbs.push(glowBox(0.09, 0.09, 0.09, BULB[i % 4], -3.92, sag, s));
+  bulbs.push(glowBox(0.09, 0.09, 0.09, BULB[(i + 2) % 4], s, sag, -3.92));
+}
+bulbs.forEach((b, i) => { b.userData.phase = i * 1.7; b.material.color.set('#5a5560'); }); // unlit glass when the lamps are off
+const strings = [point('#ffc080', 1.5, 6, -3.5, 4.0, 0), point('#ffc080', 1.5, 6, 0, 4.0, -3.5)];
+
+// floor lamp
+box(0.4, 0.05, 0.4, '#222222', -0.6, 0.03, -3.5);
+box(0.06, 2.2, 0.06, '#222222', -0.6, 1.1, -3.5);
+const shade = flat(new THREE.CylinderGeometry(0.2, 0.34, 0.42, 8), '#f3d9a0', -0.6, 2.3, -3.5);
+shade.material.emissive.set('#c08840'); shade.castShadow = false;
+const lamp = point('#ffb866', 7, 8, -0.6, 2.05, -3.3);
+lamp.castShadow = true; lamp.shadow.mapSize.set(512, 512); lamp.shadow.bias = -0.004;
+
+// ---------- games ----------
+const games = zone('games', 'Oyunlar', 'Burada: oyun projelerim (2D_Platform, OpenGL, Celestial Contact…) ve en sevdiğim 5 oyun.');
+box(2.2, 0.6, 0.8, '#2f2840', -2.3, 0.3, -3.5, games);
+box(2.0, 1.2, 0.15, '#0d0d10', -2.3, 1.35, -3.75, games);
+const tv = glowBox(1.8, 1.0, 0.02, '#c03a78', -2.3, 1.35, -3.67, games);
+box(0.5, 0.12, 0.4, '#eeeeee', -1.6, 0.66, -3.4, games);
+glowBox(0.05, 0.03, 0.02, '#40a0ff', -1.45, 0.66, -3.19, games);
+for (let i = 0; i < 4; i++) box(0.06, 0.3, 0.22, ['#d04040', '#40a040', '#4060d0', '#e0c040'][i], -3.2 + i * 0.08, 0.75, -3.45, games);
+const tvLight = point('#ff5c9a', 4, 6, -2.3, 1.3, -2.9, games);
+const NEON = '#ff4fd8', neon = [];
+neon.push(glowBox(0.06, 0.8, 0.04, NEON, -2.65, 3.0, -3.97, games));
+const n1 = glowBox(0.81, 0.06, 0.04, NEON, -2.3, 3.2, -3.97, games); n1.rotation.z = -0.519; neon.push(n1);
+const n2 = glowBox(0.81, 0.06, 0.04, NEON, -2.3, 2.8, -3.97, games); n2.rotation.z = 0.519; neon.push(n2);
+const neonLight = point(NEON, 3, 4.5, -2.3, 3.0, -3.4, games);
+box(0.8, 2.0, 0.8, '#2a1f4a', -3.6, 1.0, -2.3, games);
+box(0.8, 0.12, 0.02, '#ff5c9a', -3.6, 1.6, -1.89, games);
+box(0.8, 0.06, 0.02, '#ffd040', -3.6, 1.45, -1.89, games);
+glowBox(0.05, 0.25, 0.7, '#ff7ab0', -3.18, 1.85, -2.3, games);
+const arcadeScreen = glowBox(0.04, 0.5, 0.6, '#30c090', -3.18, 1.4, -2.3, games);
+box(0.35, 0.08, 0.75, '#1a1a2a', -3.05, 1.0, -2.3, games);
+glowBox(0.05, 0.03, 0.05, '#ff4040', -2.98, 1.06, -2.15, games);
+glowBox(0.05, 0.03, 0.05, '#ffe040', -2.98, 1.06, -2.05, games);
+box(0.03, 0.12, 0.03, '#111111', -3.0, 1.1, -2.5, games);
+point('#40f0b0', 3, 4, -2.7, 1.4, -2.3, games);
+box(3.0, 0.03, 2.4, '#c8a060', -1.6, 0.015, -1.0, games);
+box(2.8, 0.04, 2.2, '#34507c', -1.6, 0.02, -1.0, games);
+box(0.35, 0.07, 0.2, '#1a1a1a', -0.9, 0.07, -0.6, games);
+box(0.35, 0.07, 0.2, '#f0f0f0', -2.3, 0.07, -1.7, games).rotation.y = 0.6;
+const bag = flat(new THREE.IcosahedronGeometry(0.62, 1), '#6a4a9a', -1.7, 0.4, -0.3, games);
+bag.scale.y = 0.7;
+const cat = new THREE.Group(); cat.position.set(-1.7, 0.86, -0.3); games.add(cat);
+box(0.5, 0.2, 0.3, '#d9893a', 0, 0, 0, cat);
+box(0.22, 0.2, 0.22, '#d9893a', 0.3, 0.05, 0.02, cat);
+box(0.06, 0.08, 0.05, '#d9893a', 0.33, 0.18, -0.06, cat);
+box(0.06, 0.08, 0.05, '#d9893a', 0.33, 0.18, 0.1, cat);
+box(0.3, 0.06, 0.06, '#b86a28', -0.3, -0.06, 0.15, cat).rotation.y = 0.5;
+
+// ---------- tech ----------
+const tech = zone('tech', 'Teknoloji', 'Burada: filetransfer-go, wavtoflac, genetik algoritma… ve takip ettiğim 5 teknoloji.');
+box(2.8, 0.15, 1.2, '#7b5a43', 1.4, 1.4, -3.35, tech);
+for (const [x, z] of [[0.1, -3.85], [2.7, -3.85], [0.1, -2.85], [2.7, -2.85]]) box(0.12, 1.33, 0.12, '#5e4433', x, 0.67, z, tech);
+box(0.15, 0.3, 0.15, '#222222', 1.2, 1.62, -3.6, tech);
+box(1.5, 0.9, 0.1, '#111111', 1.2, 2.2, -3.65, tech);
+glowBox(1.35, 0.75, 0.02, '#1a4a6a', 1.2, 2.2, -3.59, tech);
+const CODE = ['#7ad0ff', '#ff9ad0', '#a0ff8a', '#ffd27a'];
+for (let i = 0; i < 7; i++) { const w = 0.25 + rnd() * 0.7, ind = (i % 3) * 0.1; glowBox(w, 0.04, 0.01, CODE[i % 4], 0.6 + ind + w / 2, 2.48 - i * 0.09, -3.575, tech); }
+box(0.9, 0.05, 0.3, '#dddddd', 1.2, 1.5, -3.0, tech);
+box(0.1, 0.04, 0.16, '#dddddd', 1.85, 1.5, -3.0, tech);
+box(0.15, 0.2, 0.15, '#f0c040', 2.55, 1.57, -2.95, tech);
+box(0.04, 0.4, 0.04, '#333333', 0.35, 1.67, -3.6, tech);
+const phones = flat(new THREE.TorusGeometry(0.14, 0.035, 4, 8, Math.PI), '#e05050', 0.35, 1.8, -3.6, tech);
+phones.rotation.y = Math.PI / 2;
+box(0.25, 0.05, 0.25, '#333333', 2.5, 1.5, -3.65, tech);
+box(0.04, 0.5, 0.04, '#333333', 2.5, 1.75, -3.65, tech);
+const head = box(0.3, 0.12, 0.2, '#e0b040', 2.38, 2.0, -3.5, tech); head.castShadow = false;
+head.material.emissive.set('#604010');
+const deskLamp = new THREE.SpotLight('#ffd08a', 9, 4, 0.75, 0.5, 1.5);
+deskLamp.position.set(2.3, 1.93, -3.4); deskLamp.target.position.set(1.7, 1.45, -3.0);
+deskLamp.castShadow = true; deskLamp.shadow.mapSize.set(512, 512); deskLamp.shadow.bias = -0.002;
+tech.add(deskLamp, deskLamp.target);
+box(0.5, 1.2, 1.0, '#1e1e26', 3.3, 0.6, -3.35, tech);
+const rgb = [glowBox(0.02, 0.28, 0.28, '#ff00ff', 3.56, 0.8, -3.35, tech), glowBox(0.02, 0.28, 0.28, '#ff00ff', 3.56, 0.42, -3.35, tech), glowBox(0.5, 0.03, 0.03, '#ff00ff', 3.3, 1.2, -2.85, tech)];
+const rgbLight = point('#ff00ff', 2, 3, 3.9, 0.7, -3.0, tech);
+box(0.5, 0.8, 0.6, '#333333', 1.3, 0.4, -2.2, tech).scale.set(0.2, 1, 0.2);
+box(0.8, 0.1, 0.8, '#2a2a33', 1.3, 0.8, -2.2, tech);
+box(0.8, 0.9, 0.1, '#2a2a33', 1.3, 1.3, -1.8, tech);
+box(1.2, 0.06, 0.35, '#7b5a43', 3.3, 2.6, -3.82, tech);
+box(0.3, 0.2, 0.25, '#2f6f3f', 2.95, 2.73, -3.8, tech);
+const leds = [0, 1, 2].map(i => glowBox(0.03, 0.03, 0.01, '#40ff60', 2.88 + i * 0.07, 2.73, -3.67, tech));
+box(0.14, 0.18, 0.12, '#b0b8c0', 3.35, 2.72, -3.8, tech);
+box(0.12, 0.1, 0.1, '#b0b8c0', 3.35, 2.86, -3.8, tech);
+glowBox(0.03, 0.02, 0.01, '#40d0ff', 3.32, 2.87, -3.745, tech);
+glowBox(0.03, 0.02, 0.01, '#40d0ff', 3.38, 2.87, -3.745, tech);
+for (let i = 0; i < 3; i++) box(0.12, 0.3, 0.22, ['#c05050', '#5070c0', '#d0b040'][i], 3.65 + i * 0.13, 2.78, -3.82, tech);
+point('#5ab0e0', 3, 4, 1.2, 2.2, -3.0, tech);
+
+// ---------- cinema ----------
+const cinema = zone('cinema', 'Sinema', 'Burada: CineVault, film veritabanı projeleri ve en sevdiğim 5 film.');
+for (const [z, frame, art, mark] of [[-0.9, '#f0c040', '#7a2e2e', '#ffd27a'], [0.6, '#e0703a', '#1f3b5a', '#e8e8f0'], [2.0, '#dddddd', '#2e4a3a', '#ff8a5a']]) {
+  box(0.05, 1.5, 1.05, frame, -3.97, 2.75, z, cinema);
+  box(0.02, 1.3, 0.85, art, -3.94, 2.75, z, cinema);
+  box(0.02, 0.4, 0.4, mark, -3.925, 2.95, z, cinema);
+  box(0.02, 0.06, 0.6, frame, -3.925, 2.25, z, cinema);
+}
+const wash = new THREE.SpotLight('#ffe0b0', 6, 6, 0.9, 0.6, 1.5);
+wash.position.set(-2.4, 4.4, 0.6); wash.target.position.set(-4, 2.6, 0.6);
+cinema.add(wash, wash.target);
+box(0.5, 0.08, 2.2, '#7b5a43', -3.75, 1.45, 0.6, cinema);
+for (const z of [0.0, 0.6]) { const r = flat(new THREE.CylinderGeometry(0.28, 0.28, 0.08, 10), '#bbbbbb', -3.7, 1.78, z, cinema); r.rotation.z = Math.PI / 2; }
+box(0.04, 0.26, 0.36, '#222222', -3.7, 1.62, 1.25, cinema);
+box(0.045, 0.06, 0.37, '#eeeeee', -3.7, 1.72, 1.25, cinema);
+box(0.06, 2.4, 1.2, '#4a3628', -3.97, 1.2, 3.2, cinema);
+for (const z of [2.6, 3.8]) box(0.45, 2.4, 0.05, '#5e4433', -3.75, 1.2, z, cinema);
+for (const y of [0.05, 0.62, 1.2, 1.78, 2.38]) box(0.45, 0.05, 1.2, '#5e4433', -3.75, y, 3.2, cinema);
+const DISC = ['#c04040', '#4060c0', '#e0c040', '#40a060', '#a050c0', '#e07040', '#dddddd', '#202020'];
+for (const base of [0.075, 0.645, 1.225, 1.805]) {
+  for (let z = 2.66; z < 3.74; z += 0.075) {
+    if (rnd() < 0.12) continue;
+    const h = 0.34 + rnd() * 0.12;
+    box(0.34, h, 0.06, DISC[Math.floor(rnd() * DISC.length)], -3.76, base + h / 2, z, cinema);
+  }
+}
+box(0.3, 0.45, 0.3, '#dd4444', -3.0, 0.22, 2.9, cinema);
+box(0.32, 0.12, 0.32, '#ffe9a8', -3.0, 0.5, 2.9, cinema);
+
+box(0.5, 0.5, 0.5, '#b5653a', 3.2, 0.25, 3.2);
+flat(new THREE.IcosahedronGeometry(0.5, 0), '#4f9a4f', 3.2, 0.95, 3.2);
+flat(new THREE.IcosahedronGeometry(0.35, 0), '#5fb05a', 3.0, 1.35, 3.3);
+flat(new THREE.IcosahedronGeometry(0.3, 0), '#448a48', 3.35, 1.3, 3.0);
+
+// ---------- time of day ----------
+// Keyframes by local hour; everything in between is blended. pos = where the sun/moon light sits (always outside the window).
+const night = { sun: '#9ab8ff', si: 2.4, pos: [3.5, 9, -11], sky: '#0e1838', bg: '#0f0d18', hs: '#4a4a8a', hg: '#2a1a22', hi: 1.0, lamps: 1, stars: 1, city: 1, beam: '#5070b0', sunA: 0, moonA: 1 };
+const noon = { sun: '#fff0d8', si: 4.5, pos: [0, 15, -11], sky: '#78b8ec', bg: '#a9bccf', hs: '#e8eeff', hg: '#8a6a50', hi: 3.2, lamps: 0, stars: 0, city: 0, beam: '#a09070', sunA: 1, moonA: 0 };
+const K = [
+  { h: 0, ...night },
+  { h: 5.5, ...night, sun: '#7080b0', si: 1.2, pos: [3, 10, -11], sky: '#28305e', bg: '#1a1828', hs: '#5a5a90', hi: 0.7, lamps: 0.7, stars: 0.5, city: 0.6, beam: '#5060a0', moonA: 0.6 },
+  { h: 7, ...noon, sun: '#ffa868', si: 3.0, pos: [2, 7.5, -11], sky: '#e89a80', bg: '#3a2c40', hs: '#c8a0b0', hg: '#3a2a22', hi: 1.0, lamps: 0.2, city: 0.2, beam: '#a06040' },
+  { h: 10, ...noon, pos: [1, 11, -11] },
+  { h: 15, ...noon, pos: [-2, 10.5, -11] },
+  { h: 18, ...noon, sun: '#ff9848', si: 3.6, pos: [-4.5, 7.5, -11], sky: '#f09858', bg: '#5a3848', hs: '#e0b090', hg: '#4a3022', hi: 1.2, lamps: 0.3, city: 0.3, beam: '#b06030' },
+  { h: 19.5, ...night, sun: '#5a68c0', si: 1.2, pos: [-4, 9, -11], sky: '#34387a', bg: '#1e1c38', hs: '#6060a0', hi: 0.8, lamps: 0.9, stars: 0.3, city: 0.9, beam: '#4050a0', moonA: 0.4 },
+  { h: 21.5, ...night },
+  { h: 24, ...night },
+];
+const ca = new THREE.Color(), cb = new THREE.Color();
+const lerpC = (out, a, b, f) => out.copy(ca.set(a)).lerp(cb.set(b), f);
+let L = 1; // how much the room lamps are on, 0..1
+function applyTime(h) {
+  let i = 0;
+  while (K[i + 1].h <= h) i++;
+  const a = K[i], b = K[i + 1];
+  let f = (h - a.h) / (b.h - a.h);
+  f = f * f * (3 - 2 * f);
+  const n = k => a[k] + (b[k] - a[k]) * f;
+  lerpC(sun.color, a.sun, b.sun, f); sun.intensity = n('si');
+  sun.position.set(...a.pos.map((v, j) => v + (b.pos[j] - v) * f)).add(sun.target.position);
+  lerpC(skyMat.color, a.sky, b.sky, f);
+  lerpC(scene.background, a.bg, b.bg, f);
+  lerpC(hemi.color, a.hs, b.hs, f); lerpC(hemi.groundColor, a.hg, b.hg, f); hemi.intensity = n('hi');
+  lerpC(beamMat.color, a.beam, b.beam, f);
+  dustMat.color.copy(beamMat.color).lerp(cb.set('#ffffff'), 0.4);
+  starMat.opacity = n('stars');
+  lerpC(cityWinMat.color, '#1a1e34', '#ffd27a', n('city'));
+  lerpC(cityMat.color, '#5a6a8a', '#0a1028', n('city'));
+  L = n('lamps');
+  lamp.intensity = 7 * L; shade.material.emissiveIntensity = L;
+  strings.forEach(s => s.intensity = 1.5 * L);
+  deskLamp.intensity = 9 * L; head.material.emissiveIntensity = L;
+  // sun crosses the window 6:00-20:00, moon 19:00-07:00 (seen through the window: x -1.4..0.5, y 1.5..2.5)
+  const arc = (t, d) => { const p = Math.min(1, Math.max(0, t / d)); return [0.5 - p * 1.9, 1.5 + Math.sin(p * Math.PI) * 0.95]; };
+  sunMat.opacity = n('sunA'); sunDisc.position.set(...arc(h - 6, 14), -5.95);
+  moonMat.opacity = n('moonA'); moonDisc.position.set(...arc((h - 19 + 24) % 24, 12), -5.94);
+  updateBeam();
+}
+
+// ---------- pixel pass: low-res render, 1px outline from depth, ordered dither ----------
+const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter });
+rt.depthTexture = new THREE.DepthTexture(1, 1);
+const post = new THREE.ShaderMaterial({
+  uniforms: { tColor: { value: rt.texture }, tDepth: { value: rt.depthTexture }, res: { value: new THREE.Vector2(1, 1) }, outline: { value: true }, dither: { value: true } },
+  vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+  fragmentShader: `
+    uniform sampler2D tColor, tDepth; uniform vec2 res; uniform bool outline, dither; varying vec2 vUv;
+    const float B[16] = float[16](0.,8.,2.,10.,12.,4.,14.,6.,3.,11.,1.,9.,15.,7.,13.,5.);
+    float D(vec2 o) { return texture2D(tDepth, vUv + o / res).r; }
+    vec3 aces(vec3 x) { return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0); }
+    void main() {
+      vec3 raw = texture2D(tColor, vUv).rgb;
+      if (D(vec2(0.0)) > 0.9999) { gl_FragColor = vec4(pow(raw, vec3(1.0 / 2.2)), 1.0); return; } // empty background: no dither
+      vec3 c = aces(raw * 1.15);
+      c = pow(c, vec3(1.0 / 2.2));
+      if (outline) {
+        float d = D(vec2(0.0));
+        float m = min(min(D(vec2(1.0, 0.0)), D(vec2(-1.0, 0.0))), min(D(vec2(0.0, 1.0)), D(vec2(0.0, -1.0))));
+        if (d - m > 0.004) c *= 0.3;
+      }
+      if (dither) {
+        vec2 p = floor(vUv * res);
+        float t = (B[int(mod(p.x, 4.0)) + int(mod(p.y, 4.0)) * 4] + 0.5) / 16.0 - 0.5;
+        c = floor(c * 12.0 + t + 0.5) / 12.0;
+      }
+      gl_FragColor = vec4(c, 1.0);
+    }`,
+  depthTest: false, depthWrite: false,
+});
+const postScene = new THREE.Scene();
+postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), post));
+const postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+const pxIn = document.getElementById('px'), pxOut = document.getElementById('pxv');
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight, px = +pxIn.value;
+  const lw = Math.max(1, Math.floor(w / px)), lh = Math.max(1, Math.floor(h / px));
+  renderer.setSize(lw, lh, false);
+  rt.setSize(lw, lh);
+  post.uniforms.res.value.set(lw, lh);
+  const a = w / h;
+  Object.assign(cam, { left: -VIEW * a / 2, right: VIEW * a / 2, top: VIEW / 2, bottom: -VIEW / 2 });
+  cam.updateProjectionMatrix();
+  pxOut.textContent = px;
+}
+pxIn.addEventListener('input', resize);
+document.getElementById('ol').addEventListener('change', e => post.uniforms.outline.value = e.target.checked);
+document.getElementById('di').addEventListener('change', e => post.uniforms.dither.value = e.target.checked);
+new ResizeObserver(resize).observe(stage);
+
+// ---------- clock controls ----------
+const hourIn = document.getElementById('hour'), playIn = document.getElementById('play'), clock = document.getElementById('clock');
+const q = new URLSearchParams(location.search).get('h'); // for testing a fixed hour
+let follow = q === null, hour = q === null ? 12 : +q;
+const localHour = () => { const d = new Date(); return d.getHours() + d.getMinutes() / 60; };
+hourIn.addEventListener('input', () => { follow = false; playIn.checked = false; hour = +hourIn.value; });
+document.getElementById('now').onclick = () => { follow = true; playIn.checked = false; };
+
+// ---------- hover and click ----------
+const ray = new THREE.Raycaster(), mouse = new THREE.Vector2(), tip = document.getElementById('tip');
+let hovered = null;
+const zoneOf = o => { while (o) { if (o.userData.zone) return o; o = o.parent; } return null; };
+function glow(g, on) {
+  g.traverse(m => {
+    if (!m.isMesh || !m.material.emissive) return;
+    m.userData.base ??= m.material.emissive.clone();
+    m.material.emissive.copy(m.userData.base);
+    if (on) m.material.emissive.add(new THREE.Color('#262626'));
+  });
+}
+stage.addEventListener('pointermove', e => {
+  const r = renderer.domElement.getBoundingClientRect();
+  mouse.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
+  ray.setFromCamera(mouse, cam);
+  const hit = ray.intersectObjects(room.children, true)[0];
+  const z = hit ? zoneOf(hit.object) : null;
+  if (z !== hovered) { if (hovered) glow(hovered, false); hovered = z; if (z) glow(z, true); }
+  stage.style.cursor = z ? 'pointer' : '';
+  tip.style.display = z ? 'block' : 'none';
+  if (z) { tip.textContent = z.userData.title; tip.style.left = (e.clientX - r.left + 14) + 'px'; tip.style.top = (e.clientY - r.top + 10) + 'px'; }
+});
+stage.addEventListener('click', e => {
+  if (!hovered || e.target.closest('#panel')) return;
+  document.getElementById('ptitle').textContent = hovered.userData.title;
+  document.getElementById('pbody').textContent = hovered.userData.body;
+  document.getElementById('panel').style.display = 'block';
+});
+document.getElementById('pclose').onclick = () => document.getElementById('panel').style.display = 'none';
+
+// ---------- life ----------
+const hue = new THREE.Color();
+let last = 0;
+renderer.setAnimationLoop(t => {
+  const s = t / 1000, dt = Math.min(0.1, s - last); last = s;
+  if (playIn.checked) { follow = false; hour = (hour + dt * 24 / 30) % 24; }
+  else if (follow) hour = localHour();
+  hourIn.value = hour;
+  clock.textContent = String(Math.floor(hour)).padStart(2, '0') + ':' + String(Math.floor(hour % 1 * 60)).padStart(2, '0');
+  applyTime(hour);
+
+  tv.material.emissiveIntensity = 0.85 + Math.sin(t / 90) * 0.1 + Math.random() * 0.1;
+  tvLight.intensity = 3 + tv.material.emissiveIntensity * 1.5;
+  arcadeScreen.material.emissive.setHSL(0.45 + Math.sin(s * 0.7) * 0.08, 0.7, 0.45);
+  const buzz = Math.random() < 0.015 ? 0.25 : 1;
+  neon.forEach(n => n.material.emissiveIntensity = buzz);
+  neonLight.intensity = 3 * buzz;
+  hue.setHSL((s * 0.08) % 1, 1, 0.5);
+  rgb.forEach(m => m.material.emissive.copy(hue));
+  rgbLight.color.copy(hue);
+  bulbs.forEach(b => b.material.emissiveIntensity = (0.6 + 0.4 * Math.sin(s * 2 + b.userData.phase)) * L);
+  leds.forEach((l, i) => l.material.emissiveIntensity = (Math.floor(s * 3 + i * 1.3) % 3) ? 1 : 0.1);
+  cat.scale.y = 1 + Math.sin(s * 2.2) * 0.04;
+  for (let i = 0; i < DUST; i++) {
+    const [x, y, k, p] = dustSeed[i], [fx, , fz] = floorPt(x, y);
+    dustPos.set([x + (fx - x) * k + Math.sin(s * 0.3 + p) * 0.08, y * (1 - k) + Math.sin(s * 0.5 + p * 2) * 0.1, -4 + (fz + 4) * k + Math.cos(s * 0.3 + p) * 0.08], i * 3);
+  }
+  dustGeo.attributes.position.needsUpdate = true;
+
+  renderer.setRenderTarget(rt);
+  renderer.render(scene, cam);
+  renderer.setRenderTarget(null);
+  renderer.render(postScene, postCam);
+});
+</script>
+</body>
+</html>
