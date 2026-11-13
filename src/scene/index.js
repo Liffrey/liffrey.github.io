@@ -5,6 +5,7 @@ import { buildRoom } from './room.js';
 import { build as buildGames } from './games.js';
 import { build as buildTech } from './tech.js';
 import { build as buildCinema } from './cinema.js';
+import { build as buildExtras } from './extras.js';
 import { applyTime } from './lighting.js';
 import { makePost } from './post.js';
 
@@ -28,6 +29,7 @@ export async function start(stage, data, { hour = null, reducedMotion = false } 
   const kit = makeKit(root);
   const room = buildRoom(kit, scene);
   const corners = { games: buildGames(kit, data), tech: buildTech(kit, data), cinema: buildCinema(kit, data) };
+  buildExtras(kit, data, corners.tech.zone);
   const small = stage.clientWidth < 700;
   room.sun.shadow.mapSize.set(small ? 1024 : 2048, small ? 1024 : 2048);
   const post = makePost(renderer);

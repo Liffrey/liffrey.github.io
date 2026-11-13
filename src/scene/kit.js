@@ -39,5 +39,16 @@ export function makeKit(root) {
     root.add(g);
     return g;
   }
-  return { box, glowBox, flat, point, zone, rnd };
+  function pixelTexture(w, h, draw) { // tiny canvas texture shown with hard pixel edges
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    draw(canvas.getContext('2d'));
+    const t = new THREE.CanvasTexture(canvas);
+    t.magFilter = t.minFilter = THREE.NearestFilter;
+    t.generateMipmaps = false;
+    t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  }
+  return { box, glowBox, flat, point, zone, rnd, pixelTexture };
 }
