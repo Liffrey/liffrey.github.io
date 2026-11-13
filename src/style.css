@@ -101,3 +101,8 @@ button:hover, button:focus-visible { border-color: var(--accent); }
 .poster { width: 64px; flex: none; border: 3px solid #d8cbb0; image-rendering: pixelated; }
 
 .contact { padding-left: 20px; }
+
+/* The live room replaces the still image once it has drawn its first frame. */
+#stage canvas { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+#stage.live .still { display: none; }
+.snapshot .intro, .snapshot .menu { display: none; }
