@@ -1,0 +1,13 @@
+{
+  "name": "Liffrey",
+  "tagline": "[PLACEHOLDER] One line about me.",
+  "about": "[PLACEHOLDER] A few sentences about me: what I build, what I play, what I watch.",
+  "github": "Liffrey",
+  "contact": [
+    { "label": "GitHub", "url": "https://github.com/Liffrey" }
+  ],
+  "cv": {
+    "summary": "[PLACEHOLDER] Short CV summary.",
+    "pdf": ""
+  }
+}

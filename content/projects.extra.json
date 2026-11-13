@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "name": "celestial-contact",
+      "title": "Celestial Contact",
+      "corner": "games",
+      "description": "[PLACEHOLDER] What it is. Screenshot and GIFs to come.",
+      "url": ""
+    }
+  ],
+  "overrides": {}
+}

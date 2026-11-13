@@ -1,0 +1,118 @@
+{
+  "games": [
+    {
+      "title": "[PLACEHOLDER] Game 1",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it."
+    },
+    {
+      "title": "[PLACEHOLDER] Game 2",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it."
+    },
+    {
+      "title": "[PLACEHOLDER] Game 3",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it."
+    },
+    {
+      "title": "[PLACEHOLDER] Game 4",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it."
+    },
+    {
+      "title": "[PLACEHOLDER] Game 5",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it."
+    }
+  ],
+  "films": [
+    {
+      "title": "[PLACEHOLDER] Film 1",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it.",
+      "poster": {
+        "colors": [
+          "#7a2e2e",
+          "#ffd27a"
+        ],
+        "motif": "sun"
+      }
+    },
+    {
+      "title": "[PLACEHOLDER] Film 2",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it.",
+      "poster": {
+        "colors": [
+          "#1f3b5a",
+          "#e8e8f0"
+        ],
+        "motif": "moon"
+      }
+    },
+    {
+      "title": "[PLACEHOLDER] Film 3",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it.",
+      "poster": {
+        "colors": [
+          "#2e4a3a",
+          "#ff8a5a"
+        ],
+        "motif": "diamond"
+      }
+    },
+    {
+      "title": "[PLACEHOLDER] Film 4",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it.",
+      "poster": {
+        "colors": [
+          "#3a2a5a",
+          "#ffcf6a"
+        ],
+        "motif": "stripes"
+      }
+    },
+    {
+      "title": "[PLACEHOLDER] Film 5",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it.",
+      "poster": {
+        "colors": [
+          "#5a3a1a",
+          "#e8e8f0"
+        ],
+        "motif": "tower"
+      }
+    }
+  ],
+  "tech": [
+    {
+      "title": "[PLACEHOLDER] Tech 1",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it."
+    },
+    {
+      "title": "[PLACEHOLDER] Tech 2",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it."
+    },
+    {
+      "title": "[PLACEHOLDER] Tech 3",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it."
+    },
+    {
+      "title": "[PLACEHOLDER] Tech 4",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it."
+    },
+    {
+      "title": "[PLACEHOLDER] Tech 5",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I love it."
+    }
+  ]
+}
