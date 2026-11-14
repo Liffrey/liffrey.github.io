@@ -81,7 +81,7 @@ button:hover, button:focus-visible { border-color: var(--accent); }
 .term-link { display: block; padding: 0; border: 0; background: none; color: var(--link); font: inherit; text-align: left; white-space: pre; }
 .term-link:hover, .term-link:focus-visible { text-decoration: underline; }
 .term-in label { display: flex; gap: 8px; color: var(--accent); margin-top: 6px; }
-.term-in input { flex: 1; background: none; border: 0; color: var(--text); font: inherit; outline: none; }
+.term-in input { flex: 1; background: none; border: 0; color: var(--text); font: inherit; }
 .calendar { margin: 16px 0 0; }
 .calendar svg { width: min(100%, 360px); display: block; image-rendering: pixelated; }
 .calendar figcaption { color: var(--muted); font-size: 14px; }

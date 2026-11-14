@@ -6,7 +6,10 @@ import { toProjects } from '../src/lib/projects.js';
 import { calendarWeeks } from '../src/lib/calendar.js';
 
 export function loadData({ root = process.cwd(), env = process.env } = {}) {
-  const read = f => JSON.parse(readFileSync(join(root, f), 'utf8'));
+  const read = f => {
+    try { return JSON.parse(readFileSync(join(root, f), 'utf8')); }
+    catch (e) { throw new Error(`${f}: ${e.message}`); } // name the file: a missing comma is the most common content mistake
+  };
   const site = read('content/site.json');
   const favorites = read('content/favorites.json');
   const extra = read('content/projects.extra.json');
@@ -23,3 +26,6 @@ export function loadData({ root = process.cwd(), env = process.env } = {}) {
 
   return { site, favorites, extra, projects: toProjects(github.repos, extra), calendar: calendarWeeks(github.days) };
 }
+
+// Edits to these folders reload the dev server's page.
+export const isWatchedFile = file => /[\\/](content|data)[\\/]/.test(file); // Windows paths use backslashes

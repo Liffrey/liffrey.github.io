@@ -36,3 +36,7 @@ test('empty GitHub answer is an error', () => {
   assert.throws(() => checkRepos([]), /no repositories/);
   assert.throws(() => checkRepos(undefined), /no repositories/);
 });
+test('a repo that was never pushed does not break the build', () => {
+  const p = toProjects([repo('empty', ['portfolio-tech'], { pushed_at: null }), repo('untagged', [], { pushed_at: null }), repo('wavtoflac', ['portfolio-tech'])], none);
+  assert.deepEqual(p.tech.map(x => [x.name, x.updated]), [['wavtoflac', '2026-01-01'], ['empty', '']]);
+});

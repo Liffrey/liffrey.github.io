@@ -25,7 +25,8 @@ function mixHex(a, b, f) {
   return '#' + x.map((v, i) => Math.round(v + (y[i] - v) * f).toString(16).padStart(2, '0')).join('');
 }
 
-// Sun crosses the window 6:00-20:00, moon 19:00-07:00 (window spans x -1.4..0.5, y 1.5..2.5).
+// Sun crosses the window 6:00-20:00, moon 18:00-07:00 (window spans x -1.4..0.5, y 1.5..2.5).
+// Each arc starts and ends while its disc is fully transparent, so neither is seen jumping back.
 function arc(t, duration) {
   const p = Math.min(1, Math.max(0, t / duration));
   return [0.5 - p * 1.9, 1.5 + Math.sin(p * Math.PI) * 0.95];
@@ -42,7 +43,7 @@ export function sampleTime(h) {
   for (const k of COLORS) t[k] = mixHex(a[k], b[k], f);
   for (const k of NUMBERS) t[k] = a[k] + (b[k] - a[k]) * f;
   t.sunDisc = arc(h - 6, 14);
-  t.moonDisc = arc((h - 19 + 24) % 24, 12);
+  t.moonDisc = arc((h - 18 + 24) % 24, 13);
   return t;
 }
 

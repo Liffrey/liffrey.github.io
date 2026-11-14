@@ -49,3 +49,12 @@ test('formatHour shows the real clock for every minute of the day', () => {
     }
   }
 });
+test('the sun and moon never jump while they can be seen', () => {
+  for (let h = 0; h < 24; h += 0.01) {
+    const a = sampleTime(h), b = sampleTime(h + 0.01);
+    for (const [disc, alpha] of [['sunDisc', 'sunA'], ['moonDisc', 'moonA']]) {
+      if (a[alpha] < 0.01 && b[alpha] < 0.01) continue;
+      assert.ok(Math.abs(a[disc][0] - b[disc][0]) < 0.05, `${disc} jumps at ${h.toFixed(2)}`);
+    }
+  }
+});

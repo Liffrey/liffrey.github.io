@@ -19,7 +19,10 @@ export function initPanels({ onOpen = () => {}, onClose = () => {} } = {}) {
   }
 
   function navigate(route) {
-    history.pushState({ inApp: true }, '', '#/' + route);
+    // Panels are modal, so a route is already set only mid-flight (a double click, or a second object):
+    // replace it, or Back would land on another panel entry instead of the room.
+    if (parseRoute(location.hash)) history.replaceState(history.state, '', '#/' + route);
+    else history.pushState({ inApp: true }, '', '#/' + route);
     handle();
   }
 
