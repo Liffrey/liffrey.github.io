@@ -44,4 +44,4 @@ MSYS_NO_PATHCONV=1 node scripts/snapshot.mjs --url "/?h=20&snapshot" --size 1200
 
 ## License
 
-The Pixelify Sans font is under the SIL Open Font License (`public/fonts/OFL.txt`).
+Code: MIT (`LICENSE`). The Pixelify Sans font is under the SIL Open Font License (`public/fonts/OFL.txt`).
