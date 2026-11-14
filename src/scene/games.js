@@ -10,6 +10,7 @@ export function build(kit) {
   box(0.5, 0.12, 0.4, '#eeeeee', -1.6, 0.66, -3.4, games);
   glowBox(0.05, 0.03, 0.02, '#40a0ff', -1.45, 0.66, -3.19, games);
   for (let i = 0; i < 4; i++) box(0.06, 0.3, 0.22, ['#d04040', '#40a040', '#4060d0', '#e0c040'][i], -3.2 + i * 0.08, 0.75, -3.45, games);
+  const bars = [1.765, 0.935].map(y => { const b = box(1.8, 0.17, 0.01, '#000000', -2.3, y, -3.655, games); b.castShadow = false; b.visible = false; return b; }); // cinemascope bands for the late film
   const tvLight = point('#ff5c9a', 4, 6, -2.3, 1.3, -2.9, games);
   const NEON = '#ff4fd8', neon = [];
   neon.push(glowBox(0.06, 0.8, 0.04, NEON, -2.65, 3.0, -3.97, games));
@@ -39,12 +40,22 @@ export function build(kit) {
   box(0.06, 0.08, 0.05, '#d9893a', 0.33, 0.18, 0.1, cat);
   box(0.3, 0.06, 0.06, '#b86a28', -0.3, -0.06, 0.15, cat).rotation.y = 0.5;
 
+  const GAME = ['#c03a78', '#3ac0a0', '#e0c040', '#4060d0'], film = new THREE.Color();
   return {
     zone: games, tv, tvLight, arcadeScreen, marquee,
+    // evening: a game on the TV and the arcade in attract mode; night: a film with bands; otherwise the TV is off
     tick(s, routine, motion) {
+      const evening = routine === 'evening', night = routine === 'night';
+      bars.forEach(b => b.visible = night);
+      if (evening) tv.material.emissive.set(motion ? GAME[Math.floor(s / 0.4) % GAME.length] : GAME[0]);
+      else if (night) tv.material.emissive.set('#1a2840').lerp(film.set('#503820'), motion ? 0.5 + 0.5 * Math.sin(s * Math.PI / 4) : 0.5);
+      else tv.material.emissive.set('#000000');
       tv.material.emissiveIntensity = motion ? 0.85 + Math.sin(s * 1000 / 90) * 0.1 + Math.random() * 0.1 : 0.9;
-      tvLight.intensity = 3 + tv.material.emissiveIntensity * 1.5;
-      arcadeScreen.material.emissive.setHSL(0.45 + Math.sin(s * 0.7) * 0.08, 0.7, 0.45);
+      tvLight.color.copy(tv.material.emissive);
+      tvLight.intensity = evening || night ? 3 + tv.material.emissiveIntensity * 1.5 : 0;
+      if (evening) arcadeScreen.material.emissive.setHSL(0.45 + Math.sin(s * 0.7) * 0.08, 0.7, 0.45);
+      else arcadeScreen.material.emissive.set('#205040');
+      marquee.material.emissiveIntensity = evening && motion && Math.floor(s * 2) % 2 ? 0.3 : 1;
       const buzz = motion && Math.random() < 0.015 ? 0.25 : 1;
       neon.forEach(n => n.material.emissiveIntensity = buzz);
       neonLight.intensity = 3 * buzz;

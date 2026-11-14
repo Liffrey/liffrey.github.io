@@ -6,6 +6,7 @@
     "dev": "vite",
     "build": "vite build && node scripts/check-size.mjs",
     "preview": "vite preview",
+    "snapshot": "node scripts/snapshot.mjs",
     "test": "node --test"
   },
   "dependencies": {

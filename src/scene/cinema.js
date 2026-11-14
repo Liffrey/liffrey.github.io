@@ -40,6 +40,13 @@ export function build(kit, data) {
   }
   box(0.3, 0.45, 0.3, '#dd4444', -3.0, 0.22, 2.9, cinema);
   box(0.32, 0.12, 0.32, '#ffe9a8', -3.0, 0.5, 2.9, cinema);
+  const popcorn = kit.steam(-3.0, 0.65, 2.9, cinema);
 
-  return { zone: cinema, tick() {} };
+  return {
+    zone: cinema,
+    tick(s, routine, motion) { // night: the popcorn is fresh
+      popcorn.group.visible = routine === 'night' && motion;
+      if (popcorn.group.visible) popcorn.tick(s);
+    },
+  };
 }

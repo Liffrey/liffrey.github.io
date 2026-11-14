@@ -12,7 +12,10 @@ export function build(kit) {
   const CODE = ['#7ad0ff', '#ff9ad0', '#a0ff8a', '#ffd27a'], code = [];
   for (let i = 0; i < 7; i++) {
     const w = 0.25 + rnd() * 0.7, ind = (i % 3) * 0.1;
-    code.push(glowBox(w, 0.04, 0.01, CODE[i % 4], 0.6 + ind + w / 2, 2.48 - i * 0.09, -3.575, tech));
+    const line = glowBox(w, 0.04, 0.01, CODE[i % 4], 0.6 + ind + w / 2, 2.48 - i * 0.09, -3.575, tech);
+    line.userData.left = 0.6 + ind;
+    line.userData.w = w;
+    code.push(line);
   }
   box(0.9, 0.05, 0.3, '#dddddd', 1.2, 1.5, -3.0, tech);
   box(0.1, 0.04, 0.16, '#dddddd', 1.85, 1.5, -3.0, tech);
@@ -43,11 +46,23 @@ export function build(kit) {
   glowBox(0.03, 0.02, 0.01, '#40d0ff', 3.38, 2.87, -3.745, tech);
   for (let i = 0; i < 3; i++) box(0.12, 0.3, 0.22, ['#c05050', '#5070c0', '#d0b040'][i], 3.65 + i * 0.13, 2.78, -3.82, tech);
   point('#5ab0e0', 3, 4, 1.2, 2.2, -3.0, tech);
+  const coffee = kit.steam(2.55, 1.7, -2.95, tech);
 
   const hue = new THREE.Color();
   return {
     zone: tech, deskLamp, head, code,
+    // morning: coffee steams and code is being typed, line by line
     tick(s, routine, motion) {
+      const morning = routine === 'morning' && motion;
+      coffee.group.visible = morning;
+      if (morning) coffee.tick(s);
+      const t = s % (code.length * 0.5 + 2);
+      code.forEach((line, i) => {
+        const k = morning ? Math.min(1, Math.max(0, (t - i * 0.5) / 0.5)) : 1;
+        line.visible = k > 0;
+        line.scale.x = Math.max(k, 0.001);
+        line.position.x = line.userData.left + line.userData.w * k / 2; // grows from its left edge
+      });
       hue.setHSL((s * 0.08) % 1, 1, 0.5);
       rgb.forEach(m => m.material.emissive.copy(hue));
       rgbLight.color.copy(hue);

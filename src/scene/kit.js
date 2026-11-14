@@ -50,5 +50,27 @@ export function makeKit(root) {
     t.colorSpace = THREE.SRGBColorSpace;
     return t;
   }
-  return { box, glowBox, flat, point, zone, rnd, pixelTexture };
+  function steam(x, y, z, parent = root) { // four puffs rising and fading; the caller decides when it shows
+    const group = new THREE.Group();
+    group.position.set(x, y, z);
+    parent.add(group);
+    const puffs = [0, 1, 2, 3].map(() => {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.05),
+        new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, depthWrite: false }));
+      m.raycast = noRay;
+      group.add(m);
+      return m;
+    });
+    return {
+      group,
+      tick(s) {
+        puffs.forEach((p, i) => {
+          const k = (s / 2 + i / 4) % 1;
+          p.position.set(Math.sin((s + i) * 2) * 0.03, k * 0.4, 0);
+          p.material.opacity = 0.6 * (1 - k);
+        });
+      },
+    };
+  }
+  return { box, glowBox, flat, point, zone, rnd, pixelTexture, steam };
 }
