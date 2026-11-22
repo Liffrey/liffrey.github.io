@@ -44,7 +44,7 @@ function techPanel(d) {
   return panel('tech', 'Tech',
     `<div class="term"><div class="term-out" aria-live="polite">${shown.join('')}</div>` +
     `<form class="term-in"><label><span aria-hidden="true">$</span> <input name="cmd" autocomplete="off" spellcheck="false" aria-label="Terminal command"></label></form></div>` +
-    `<figure class="calendar">${calendarSVG(d.calendar.grid)}<figcaption>${d.calendar.total} contributions in the last 13 weeks</figcaption></figure>` +
+    `<figure class="calendar">${calendarSVG(d.calendar.grid)}<figcaption>${d.calendar.total} contribution${d.calendar.total === 1 ? '' : 's'} in the last 13 weeks</figcaption></figure>` +
     `<details class="plain"><summary>Projects as a list</summary>${projectList(d.projects.tech)}</details>`);
 }
 

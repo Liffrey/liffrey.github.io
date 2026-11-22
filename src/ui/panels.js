@@ -12,7 +12,7 @@ export function initPanels({ onOpen = () => {}, onClose = () => {} } = {}) {
     const mine = ++seq;
     if (open) { const d = dialogOf(open); open = null; d.close(); }
     if (!route) return onClose();
-    await onOpen(route);
+    try { await onOpen(route); } catch (err) { console.warn('Camera flight failed, opening the panel anyway', err); }
     if (mine !== seq) return; // the visitor went somewhere else during the camera flight
     open = route;
     dialogOf(route).showModal();
@@ -39,7 +39,9 @@ export function initPanels({ onOpen = () => {}, onClose = () => {} } = {}) {
   for (const a of document.querySelectorAll('.menu a')) {
     a.addEventListener('click', e => {
       const route = parseRoute(a.getAttribute('href'));
-      if (route) { e.preventDefault(); navigate(route); }
+      if (!route || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return; // let the browser open a new tab or window
+      e.preventDefault();
+      navigate(route);
     });
   }
   addEventListener('hashchange', handle);

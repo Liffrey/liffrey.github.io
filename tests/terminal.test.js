@@ -37,3 +37,5 @@ test('tab completion', () => {
   assert.equal(complete('cat ', data), 'cat ');      // three matches, no common prefix
   assert.equal(complete('zz', data), 'zz');
 });
+test('a favorite without a reason has no trailing dash', () =>
+  assert.deepEqual(runCommand('favorites', { ...data, favorites: [{ title: 'Go', year: 2009, why: '' }] }).lines, ['Go (2009)']));

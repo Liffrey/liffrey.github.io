@@ -34,3 +34,8 @@ test('empty lists render empty states, never null or undefined', () => {
 });
 test('null-ish repo fields leave no trace', () =>
   assert.doesNotMatch(injectContent(html, data()), />[^<]*\b(undefined|null)\b/));
+test('one contribution is singular', () => {
+  const d = data();
+  d.calendar.total = 1;
+  assert.match(injectContent(html, d), /1 contribution in the last/);
+});

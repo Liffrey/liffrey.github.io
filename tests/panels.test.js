@@ -58,3 +58,15 @@ test('a double click during the camera flight still lets the visitor go back to 
   assert.equal(dialog('panel-tech').open, false);
   assert.ok(closed > 0, 'the camera is told to fly home');
 });
+
+test('the panel still opens when the camera flight fails', async () => {
+  const { dialog } = fakeBrowser();
+  const { initPanels } = await import(`../src/ui/panels.js?flight-fails`);
+  const warn = console.warn;
+  console.warn = () => {};
+  try {
+    initPanels({ onOpen: () => { throw new Error('no zone'); } }).navigate('cv');
+    await tick();
+  } finally { console.warn = warn; }
+  assert.equal(dialog('panel-cv').open, true);
+});

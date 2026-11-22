@@ -16,6 +16,9 @@ export async function start(stage, data, { hour = null, reducedMotion = false, o
   renderer.setPixelRatio(1);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.BasicShadowMap; // hard shadows suit pixel art
+  // Shadows only move with the hour, so they are redrawn when it changes, not every frame.
+  // shortcut: the cat's breathing (4% scale) keeps a still shadow; redraw per frame if a big caster ever animates.
+  renderer.shadowMap.autoUpdate = false;
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color('#0f0d18');
@@ -76,11 +79,12 @@ export async function start(stage, data, { hour = null, reducedMotion = false, o
     return fly(to, zoom);
   }
 
-  let fixed = hour;
+  let fixed = hour, shadowHour = null;
   const motion = !reducedMotion;
   function frame(t = 0) {
     flyStep();
     const s = t / 1000, h = fixed ?? localHour();
+    if (h !== shadowHour) { shadowHour = h; renderer.shadowMap.needsUpdate = true; }
     applyTime(room, corners, sampleTime(h));
     const routine = routineAt(h);
     room.tick(s, motion);

@@ -44,7 +44,7 @@ export function runCommand(input, data) {
     case 'whoami': return { lines: data.about.split('\n') };
     case 'favorites':
       return data.favorites.length
-        ? { lines: data.favorites.map(f => `${f.title} (${f.year}) — ${f.why}`) }
+        ? { lines: data.favorites.map(f => `${f.title} (${f.year})${f.why ? ` — ${f.why}` : ''}`) }
         : say('no favorites yet');
     case 'clear': return { lines: [], clear: true };
     case 'exit': return { lines: [], exit: true };

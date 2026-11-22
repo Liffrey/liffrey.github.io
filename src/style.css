@@ -94,6 +94,7 @@ button:hover, button:focus-visible { border-color: var(--accent); }
 .cart { min-width: 120px; padding: 10px 12px; background: #1d1830; border: 2px solid #4a4266; border-radius: 4px 4px 10px 10px; }
 .cart[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
 .details { background: #07060c; border: 1px solid var(--line); border-radius: 8px; padding: 14px; align-self: start; margin-top: 18px; }
+.details:empty { display: none; }
 @media (max-width: 700px) { .console { grid-template-columns: 1fr; } }
 
 /* Cinema */

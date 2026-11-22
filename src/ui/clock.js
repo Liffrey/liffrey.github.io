@@ -12,6 +12,7 @@ export function initClock(onChange, initial = null) {
     const text = formatHour(hour ?? localHour());
     badge.textContent = text;
     badge.setAttribute('aria-label', `Room time ${text}. Change the time of day`);
+    range.setAttribute('aria-valuetext', text); // read "18:30", not "18.5"
   };
   const toggle = open => {
     pop.hidden = !open;
