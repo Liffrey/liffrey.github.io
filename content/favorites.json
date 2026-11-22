@@ -28,15 +28,15 @@
   ],
   "films": [
     {
-      "title": "[PLACEHOLDER] Film 1",
-      "year": 2000,
+      "title": "Akira",
+      "year": 1988,
       "why": "[PLACEHOLDER] Why I love it.",
       "poster": {
         "colors": [
-          "#7a2e2e",
-          "#ffd27a"
+          "#c8141e",
+          "#f4ecd8"
         ],
-        "motif": "sun"
+        "motif": "bike"
       }
     },
     {
@@ -113,6 +113,26 @@
       "title": "[PLACEHOLDER] Tech 5",
       "year": 2000,
       "why": "[PLACEHOLDER] Why I love it."
+    }
+  ],
+  "books": [
+    {
+      "title": "[PLACEHOLDER] Novel 1",
+      "author": "[PLACEHOLDER] Author",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I recommend it."
+    },
+    {
+      "title": "[PLACEHOLDER] Novel 2",
+      "author": "[PLACEHOLDER] Author",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I recommend it."
+    },
+    {
+      "title": "[PLACEHOLDER] Novel 3",
+      "author": "[PLACEHOLDER] Author",
+      "year": 2000,
+      "why": "[PLACEHOLDER] Why I recommend it."
     }
   ]
 }

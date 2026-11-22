@@ -18,6 +18,7 @@ export function applyTime(room, corners, t) {
   room.starMat.opacity = t.stars;
   room.cityWinMat.color.set('#1a1e34').lerp(tmp.set('#ffd27a'), t.city);
   room.cityMat.color.set('#5a6a8a').lerp(tmp.set('#0a1028'), t.city);
+  room.neonMat.color.set('#4a3a48').lerp(tmp.set('#ff2a3a'), t.city);
 
   const L = (room.lamps = t.lamps);
   room.lamp.intensity = 7 * L;

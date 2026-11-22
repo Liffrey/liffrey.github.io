@@ -12,7 +12,7 @@ export function build(kit) {
   for (let i = 0; i < 4; i++) box(0.06, 0.3, 0.22, ['#d04040', '#40a040', '#4060d0', '#e0c040'][i], -3.2 + i * 0.08, 0.75, -3.45, games);
   const bars = [1.765, 0.935].map(y => { const b = box(1.8, 0.17, 0.01, '#000000', -2.3, y, -3.655, games); b.castShadow = false; b.visible = false; return b; }); // cinemascope bands for the late film
   const tvLight = point('#ff5c9a', 4, 6, -2.3, 1.3, -2.9, games);
-  const NEON = '#ff4fd8', neon = [];
+  const NEON = '#ff3048', neon = [];
   neon.push(glowBox(0.06, 0.8, 0.04, NEON, -2.65, 3.0, -3.97, games));
   const n1 = glowBox(0.81, 0.06, 0.04, NEON, -2.3, 3.2, -3.97, games); n1.rotation.z = -0.519; neon.push(n1);
   const n2 = glowBox(0.81, 0.06, 0.04, NEON, -2.3, 2.8, -3.97, games); n2.rotation.z = 0.519; neon.push(n2);
@@ -31,7 +31,7 @@ export function build(kit) {
   box(2.8, 0.04, 2.2, '#34507c', -1.6, 0.02, -1.0, games);
   box(0.35, 0.07, 0.2, '#1a1a1a', -0.9, 0.07, -0.6, games);
   box(0.35, 0.07, 0.2, '#f0f0f0', -2.3, 0.07, -1.7, games).rotation.y = 0.6;
-  const bag = flat(new THREE.IcosahedronGeometry(0.62, 1), '#6a4a9a', -1.7, 0.4, -0.3, games);
+  const bag = flat(new THREE.IcosahedronGeometry(0.62, 1), '#b8323a', -1.7, 0.4, -0.3, games);
   bag.scale.y = 0.7;
   const cat = new THREE.Group(); cat.position.set(-1.7, 0.86, -0.3); games.add(cat);
   box(0.5, 0.2, 0.3, '#d9893a', 0, 0, 0, cat);

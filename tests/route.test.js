@@ -15,3 +15,4 @@ test('moveSelection stays inside rows and skips empty ones', () => {
   assert.deepEqual(moveSelection([0, 5], [1, 1], 'ArrowUp'), [1, 1]);
   assert.deepEqual(moveSelection([3, 5], [0, 1], 'Enter'), [0, 1]);
 });
+test('books is a route', () => assert.equal(parseRoute('#/books'), 'books'));

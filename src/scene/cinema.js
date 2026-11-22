@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { motifPixels } from '../lib/posters.js';
+import { motifPath } from '../lib/posters.js';
 
-// Three framed posters under a spotlight, reels and clapper shelf, film shelf, popcorn.
+// Three framed posters under a spotlight, reels and clapper shelf, film shelf.
 // The posters show the first three favorite films; a frame without a film stays plain.
 export function build(kit, data) {
   const { box, flat } = kit;
@@ -13,11 +13,19 @@ export function build(kit, data) {
     if (!film) return;
     const [bg, fg] = film.poster.colors;
     art.material.color.set('#ffffff');
-    art.material.map = kit.pixelTexture(8, 12, ctx => {
+    art.material.map = kit.canvasTexture(160, 240, ctx => {
       ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, 8, 12);
+      ctx.fillRect(0, 0, 160, 240);
+      ctx.scale(2, 2); // the motif is drawn on an 80x120 sheet
       ctx.fillStyle = fg;
-      for (const [x, y, w, h] of motifPixels(film.poster.motif)) ctx.fillRect(x, y, w, h);
+      ctx.fill(new Path2D(motifPath(film.poster.motif)));
+      const title = film.title.toUpperCase(); // along the bottom, shrunk to fit
+      ctx.font = '900 15px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      const k = Math.min(1, 68 / ctx.measureText(title).width);
+      ctx.translate(40, 110);
+      ctx.scale(k, k);
+      ctx.fillText(title, 0, 0);
     });
   });
   const wash = new THREE.SpotLight('#ffe0b0', 6, 6, 0.9, 0.6, 1.5);
@@ -30,23 +38,14 @@ export function build(kit, data) {
   box(0.06, 2.4, 1.2, '#4a3628', -3.97, 1.2, 3.2, cinema);
   for (const z of [2.6, 3.8]) box(0.45, 2.4, 0.05, '#5e4433', -3.75, 1.2, z, cinema);
   for (const y of [0.05, 0.62, 1.2, 1.78, 2.38]) box(0.45, 0.05, 1.2, '#5e4433', -3.75, y, 3.2, cinema);
-  const DISC = ['#c04040', '#4060c0', '#e0c040', '#40a060', '#a050c0', '#e07040', '#dddddd', '#202020'];
+  // film cases: all the same height and mostly black or blue, so they don't read as the books next door
+  const CASE = ['#1c1c26', '#1c1c26', '#1c1c26', '#2a4a9a', '#2a4a9a', '#d8d4cc', '#b8323a'];
   for (const base of [0.075, 0.645, 1.225, 1.805]) {
-    for (let z = 2.66; z < 3.74; z += 0.075) {
-      if (kit.rnd() < 0.12) continue;
-      const h = 0.34 + kit.rnd() * 0.12;
-      box(0.34, h, 0.06, DISC[Math.floor(kit.rnd() * DISC.length)], -3.76, base + h / 2, z, cinema);
+    for (let z = 2.66; z < 3.74; z += 0.05) {
+      if (kit.rnd() < 0.1) continue;
+      box(0.34, 0.42, 0.04, CASE[Math.floor(kit.rnd() * CASE.length)], -3.76, base + 0.21, z, cinema);
     }
   }
-  box(0.3, 0.45, 0.3, '#dd4444', -3.0, 0.22, 2.9, cinema);
-  box(0.32, 0.12, 0.32, '#ffe9a8', -3.0, 0.5, 2.9, cinema);
-  const popcorn = kit.steam(-3.0, 0.65, 2.9, cinema);
 
-  return {
-    zone: cinema,
-    tick(s, routine, motion) { // night: the popcorn is fresh
-      popcorn.group.visible = routine === 'night' && motion;
-      if (popcorn.group.visible) popcorn.tick(s);
-    },
-  };
+  return { zone: cinema, tick() {} };
 }

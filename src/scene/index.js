@@ -15,14 +15,14 @@ export async function start(stage, data, { hour = null, reducedMotion = false, o
   const renderer = new THREE.WebGLRenderer({ antialias: false }); // throws without WebGL
   renderer.setPixelRatio(1);
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.BasicShadowMap; // hard shadows suit pixel art
+  renderer.shadowMap.type = THREE.PCFShadowMap; // crisp, but not jagged at full resolution
   // Shadows only move with the hour, so they are redrawn when it changes, not every frame.
   // shortcut: the cat's breathing (4% scale) keeps a still shadow; redraw per frame if a big caster ever animates.
   renderer.shadowMap.autoUpdate = false;
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color('#0f0d18');
-  // 2:1 pixel-art isometric: azimuth 45°, elevation 30°
+  // 2:1 isometric: azimuth 45°, elevation 30°
   const HOME = new THREE.Vector3(0, 1.6, 0), OFFSET = new THREE.Vector3(12.25, 10, 12.25);
   const RIGHT = new THREE.Vector3(1, 0, -1).normalize(); // screen-right in this view
   const target = HOME.clone();
@@ -41,10 +41,10 @@ export async function start(stage, data, { hour = null, reducedMotion = false, o
   const post = makePost(renderer);
 
   function resize() {
-    const w = stage.clientWidth, h = stage.clientHeight, px = w < 700 ? 4 : 3;
-    const lw = Math.max(1, Math.floor(w / px)), lh = Math.max(1, Math.floor(h / px));
-    renderer.setSize(lw, lh, false);
-    post.setSize(lw, lh);
+    const w = stage.clientWidth, h = stage.clientHeight, dpr = Math.min(devicePixelRatio, w < 700 ? 1.5 : 2); // phones: fewer pixels to shade
+    const bw = Math.max(1, Math.round(w * dpr)), bh = Math.max(1, Math.round(h * dpr));
+    renderer.setSize(bw, bh, false);
+    post.setSize(bw, bh, dpr);
     const aspect = w / h, view = Math.max(12, 12.5 / aspect); // narrow screens zoom out so the room fits
     Object.assign(cam, { left: -view * aspect / 2, right: view * aspect / 2, top: view / 2, bottom: -view / 2 });
     cam.updateProjectionMatrix();

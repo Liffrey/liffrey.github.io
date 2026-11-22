@@ -19,3 +19,5 @@ test('javascript: contact link is rejected', () =>
 test('missing name', () => assert.match(errorsOf(c => { delete c.site.name; }), /site\.json: name/));
 test('bad corner', () =>
   assert.match(errorsOf(c => { c.extra.projects[0].corner = 'music'; }), /projects\.extra\.json: projects\[0\]\.corner/));
+test('a book needs an author', () =>
+  assert.match(errorsOf(c => { c.favorites.books[0].author = ' '; }), /books\[0\]\.author/));

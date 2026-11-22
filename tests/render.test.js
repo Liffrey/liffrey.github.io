@@ -13,8 +13,9 @@ const inline = out => JSON.parse(out.match(/<script type="application\/json" id=
 test('every placeholder is filled and every panel exists', () => {
   const out = injectContent(html, data());
   assert.doesNotMatch(out, /<!--(head|intro|panels|data)-->/);
-  for (const r of ['games', 'tech', 'cinema', 'cv', 'contact']) assert.match(out, new RegExp(`<dialog id="panel-${r}"`));
-  assert.match(out, /\[PLACEHOLDER\] Film 1/);
+  for (const r of ['games', 'tech', 'cinema', 'books', 'cv', 'contact']) assert.match(out, new RegExp(`<dialog id="panel-${r}"`));
+  assert.match(out, /\[PLACEHOLDER\] Film 2/);
+  assert.match(out, /\[PLACEHOLDER\] Novel 1/);
 });
 test('hostile text is escaped and stays intact in inline JSON', () => {
   const d = data(), evil = '<img src=x onerror=alert(1)></script><script>alert(2)</script> $& $\'';
@@ -27,9 +28,10 @@ test('hostile text is escaped and stays intact in inline JSON', () => {
 test('empty lists render empty states, never null or undefined', () => {
   const d = data();
   d.projects = { games: [], tech: [], cinema: [] };
-  d.favorites = { games: [], films: [], tech: [] };
+  d.favorites = { games: [], films: [], tech: [], books: [] };
   const out = injectContent(html, d);
   assert.match(out, /No projects yet\./);
+  assert.match(out, /No books yet\./);
   assert.doesNotMatch(out, />[^<]*\b(undefined|null)\b/);
 });
 test('null-ish repo fields leave no trace', () =>

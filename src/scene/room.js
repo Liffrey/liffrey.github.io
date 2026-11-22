@@ -29,18 +29,18 @@ export function buildRoom(kit, scene) {
   box(8, 0.38, 8, '#3a2a20', 0, -0.21, 0);
   const planks = ['#8a6a4f', '#80624a', '#8f7054'];
   for (let i = 0; i < 8; i++) box(8, 0.4, 0.96, planks[i % 3], 0, -0.2, -3.5 + i);
-  const WALL = '#40345a', WALL2 = '#4a3d64';
+  const WALL = '#323a5e', WALL2 = '#3a4370'; // night-city blue, so the red accents stand out
   box(0.3, 4.5, 8.3, WALL2, -4.15, 2.25, -0.15);
   box(4.7, 4.5, 0.3, WALL, -1.95, 2.25, -4.15);
   box(1.6, 4.5, 0.3, WALL, 3.2, 2.25, -4.15);
   box(2.0, 2.9, 0.3, WALL, 1.4, 1.45, -4.15);
   box(2.0, 0.4, 0.3, WALL, 1.4, 4.3, -4.15);
-  box(0.04, 1.2, 8, '#352a48', -3.98, 0.6, 0);
-  box(8, 1.2, 0.04, '#30263f', 0, 0.6, -3.98);
-  box(0.08, 0.06, 8, '#7a6890', -3.96, 1.22, 0);
-  box(8, 0.06, 0.08, '#7a6890', 0, 1.22, -3.96);
-  box(0.06, 0.2, 8, '#251d33', -3.97, 0.1, 0);
-  box(8, 0.2, 0.06, '#251d33', 0, 0.1, -3.97);
+  box(0.04, 1.2, 8, '#2a3050', -3.98, 0.6, 0);
+  box(8, 1.2, 0.04, '#272c4a', 0, 0.6, -3.98);
+  box(0.08, 0.06, 8, '#b8323a', -3.96, 1.22, 0);
+  box(8, 0.06, 0.08, '#b8323a', 0, 1.22, -3.96);
+  box(0.06, 0.2, 8, '#1d2036', -3.97, 0.1, 0);
+  box(8, 0.2, 0.06, '#1d2036', 0, 0.1, -3.97);
 
   // window
   const FR = '#d8cbb0';
@@ -50,8 +50,8 @@ export function buildRoom(kit, scene) {
   box(0.08, 1.28, 0.36, FR, 2.42, 3.5, -4.15);
   box(0.05, 1.2, 0.05, FR, 1.4, 3.5, -4.15);
   box(2.0, 0.05, 0.05, FR, 1.4, 3.5, -4.15);
-  box(0.35, 1.7, 0.1, '#7a3b5a', 0.12, 3.35, -3.88);
-  box(0.35, 1.7, 0.1, '#7a3b5a', 2.68, 3.35, -3.88);
+  box(0.35, 1.7, 0.1, '#a02a2e', 0.12, 3.35, -3.88);
+  box(0.35, 1.7, 0.1, '#a02a2e', 2.68, 3.35, -3.88);
   box(0.16, 0.12, 0.16, '#b5653a', 0.75, 2.98, -3.85);
   box(0.1, 0.22, 0.1, '#4f9a4f', 0.75, 3.15, -3.85);
 
@@ -66,9 +66,13 @@ export function buildRoom(kit, scene) {
   for (let i = 0; i < 14; i++) sky(0.04, 0.04, starMat, -2 + rnd() * 3.2, 1.8 + rnd() * 1.0, -6.0);
   const cityMat = new THREE.MeshBasicMaterial({ color: '#0a1028' });
   const cityWinMat = new THREE.MeshBasicMaterial({ color: '#ffd27a' });
+  const neonMat = new THREE.MeshBasicMaterial({ color: '#ff2a3a' }); // red signs on the towers, lit at night
   for (const [x, top] of [[-1.5, 1.45], [-1.1, 1.75], [-0.65, 1.5], [-0.2, 1.85], [0.25, 1.55], [0.7, 1.7]]) {
     sky(0.38, top - 0.8, cityMat, x, (top + 0.8) / 2, -5.98);
     for (let wy = 0.95; wy < top - 0.1; wy += 0.14) for (const wx of [-0.08, 0.08]) if (rnd() > 0.45) sky(0.05, 0.05, cityWinMat, x + wx, wy, -5.97);
+  }
+  for (const [x, y, w, h] of [[-1.27, 1.45, 0.04, 0.4], [-0.38, 1.55, 0.04, 0.45], [0.43, 1.3, 0.04, 0.35], [-0.2, 1.88, 0.3, 0.03], [0.7, 1.73, 0.26, 0.03]]) {
+    sky(w, h, neonMat, x, y, -5.965);
   }
 
   // light beam from the window to the floor, rebuilt when the sun moves; dust floats inside it
@@ -124,7 +128,7 @@ export function buildRoom(kit, scene) {
   flat(new THREE.IcosahedronGeometry(0.3, 0), '#448a48', 3.35, 1.3, 3.0);
 
   const refs = {
-    hemi, sun, background: scene.background, skyMat, sunMat, moonMat, sunDisc, moonDisc, starMat, cityMat, cityWinMat,
+    hemi, sun, background: scene.background, skyMat, sunMat, moonMat, sunDisc, moonDisc, starMat, cityMat, cityWinMat, neonMat,
     beamMat, dust, dustMat, updateBeam, lamp, shade, strings, bulbs, lamps: 1,
     // per frame: bulbs twinkle with the lamps, dust drifts in the beam (both still under reduced motion)
     tick(s, motion) {

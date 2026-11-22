@@ -24,7 +24,7 @@ export function validateContent({ site, favorites, extra }) {
 
   const f = (ok, path, rule) => check('favorites.json', ok, path, rule);
   favorites = isObject(favorites) ? favorites : {};
-  for (const list of ['games', 'films', 'tech']) {
+  for (const list of ['games', 'films', 'tech', 'books']) {
     const items = favorites[list];
     if (!Array.isArray(items) || items.length > 5) { f(false, list, 'must be a list of at most 5 items'); continue; }
     items.forEach((it, i) => {
@@ -32,6 +32,7 @@ export function validateContent({ site, favorites, extra }) {
       f(isFilled(it?.title), `${p}.title`, 'must be non-empty text');
       f(Number.isInteger(it?.year), `${p}.year`, 'must be a whole number');
       f(isText(it?.why), `${p}.why`, 'must be text');
+      if (list === 'books') f(isFilled(it?.author), `${p}.author`, 'must be non-empty text');
       if (list !== 'films') return;
       const c = it?.poster?.colors;
       f(Array.isArray(c) && c.length === 2 && c.every(x => /^#[0-9a-f]{6}$/i.test(x)), `${p}.poster.colors`, 'must be two colors like "#7a2e2e"');

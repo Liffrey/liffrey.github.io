@@ -1,6 +1,6 @@
 # liffrey.github.io
 
-My portfolio: an isometric pixel-art room drawn with three.js. The light follows the visitor's local time, and the objects in the room open the content (monitor → Tech, TV → Games, posters → Cinema, file → CV, phone → Contact). All text is plain HTML built from `content/`, so the site also works without WebGL.
+My portfolio: an isometric cartoon room drawn with three.js. The light follows the visitor's local time, and the objects in the room open the content (monitor → Tech, TV → Games, posters → Cinema, bookcase → Books, file → CV, phone → Contact). All text is plain HTML built from `content/`, so the site also works without WebGL.
 
 ## Run it locally
 
@@ -22,7 +22,7 @@ GITHUB_TOKEN=$(gh auth token) node scripts/fetch-github.mjs   # writes data/gith
 Edit the files in `content/`; no code changes needed. Text that still starts with `[PLACEHOLDER]` is waiting for real content.
 
 - `site.json`: name, one-line tagline, about text (`whoami` in the terminal), contact links (`https://` or `mailto:`), CV summary and the PDF's file name. Put the PDF in `public/` and set `"pdf": "cv.pdf"`.
-- `favorites.json`: up to 5 games, films and tech, each with a title, year and one sentence on why. Films also have a poster: two colors and a motif (`sun`, `moon`, `diamond`, `stripes`, `tower`). The first three films hang on the wall.
+- `favorites.json`: up to 5 games, films, tech and books, each with a title, year and one sentence on why. Books also have an author. Films also have a poster: two colors and a motif (`sun`, `moon`, `diamond`, `stripes`, `tower`, `bike`). The first three films hang on the wall, with their titles.
 - `projects.extra.json`: projects that GitHub can't list (private repos, work outside GitHub), and `overrides` to replace a repo's title or description.
 
 ## Put a repo on the site
@@ -44,4 +44,4 @@ MSYS_NO_PATHCONV=1 node scripts/snapshot.mjs --url "/?h=20&snapshot" --size 1200
 
 ## License
 
-Code: MIT (`LICENSE`). The Pixelify Sans font is under the SIL Open Font License (`public/fonts/OFL.txt`).
+Code: MIT (`LICENSE`).

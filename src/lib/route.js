@@ -1,4 +1,4 @@
-export const ROUTES = ['games', 'tech', 'cinema', 'cv', 'contact'];
+export const ROUTES = ['games', 'tech', 'cinema', 'books', 'cv', 'contact'];
 
 export function parseRoute(hash) {
   const m = /^#\/([a-z]+)$/.exec(hash);

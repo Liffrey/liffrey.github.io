@@ -78,6 +78,10 @@ function cinemaPanel(d) {
   return panel('cinema', 'Cinema', `<h3>Favorite films</h3>${films}<h3>Projects</h3>${projectList(d.projects.cinema)}`);
 }
 
+const booksPanel = ({ favorites: { books } }) => panel('books', 'Books', '<h3>Novels I recommend</h3>' + (books.length
+  ? `<ol class="books">${books.map(b => `<li><h4>${esc(b.title)}</h4>${meta(b.author, String(b.year))}${b.why ? `<p>${esc(b.why)}</p>` : ''}</li>`).join('')}</ol>`
+  : '<p class="empty">No books yet.</p>'));
+
 function cvPanel({ site }) {
   const pdf = site.cv.pdf
     ? `<p><a href="/${esc(site.cv.pdf)}" download>Download CV (PDF)</a></p>`
@@ -104,7 +108,7 @@ export function injectContent(html, d) {
   const parts = {
     head: head(d.site),
     intro: `<h1>${esc(d.site.name)}</h1><p class="tagline">${esc(d.site.tagline)}</p>`,
-    panels: [gamesPanel(d), techPanel(d), cinemaPanel(d), cvPanel(d), contactPanel(d)].join('\n'),
+    panels: [gamesPanel(d), techPanel(d), cinemaPanel(d), booksPanel(d), cvPanel(d), contactPanel(d)].join('\n'),
     data: `<script type="application/json" id="data">${json}</script>`,
   };
   // A replacer function, because a replacement string would expand "$&" found in content.
